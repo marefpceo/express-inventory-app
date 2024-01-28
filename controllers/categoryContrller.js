@@ -1,6 +1,10 @@
 const Category = require('../models/category');
 const asyncHandler = require('express-async-handler');
 
+exports.index = asyncHandler(async (req, res, next) => {
+  res.send('NOT IMPLEMENTED: Site Home Page');
+});
+
 // Displays list of all Categories
 exports.category_list = asyncHandler(async (req, res, next) => {
   res.send('NOT IMPLEMENTED: Category list');
@@ -27,7 +31,7 @@ exports.category_update_get = asyncHandler(async (req, res, next) => {
 });
 
 // Handle Category update form on POST
-exports.category_update_get = asyncHandler(async (req, res, next) => {
+exports.category_update_post = asyncHandler(async (req, res, next) => {
   res.send('NOT IMPLEMENTED: Category update POST');
 });
 

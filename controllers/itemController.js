@@ -27,12 +27,12 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
 });
 
 // Handle Item update form on POST
-exports.item_update_get = asyncHandler(async (req, res, next) => {
+exports.item_update_post = asyncHandler(async (req, res, next) => {
   res.send('NOT IMPLEMENTED: Item update POST');
 });
 
 // Display Item delete form on GET
-exports.cateogry_delete_get = asyncHandler(async (req, res, next) => {
+exports.item_delete_get = asyncHandler(async (req, res, next) => {
   res.send('NOT IMPLEMENTED: Item delete GET');
 });
 

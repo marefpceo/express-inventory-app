@@ -27,7 +27,7 @@ exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
 });
 
 // Handle Category update form on POST
-exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
+exports.sub_category_update_post = asyncHandler(async (req, res, next) => {
   res.send('NOT IMPLEMENTED: Sub Category update POST');
 });
 
