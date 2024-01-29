@@ -2,7 +2,9 @@ const Category = require('../models/category');
 const asyncHandler = require('express-async-handler');
 
 exports.index = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Site Home Page');
+  res.render('index', {
+    title: 'Grocery Inventory App',
+  });
 });
 
 // Displays list of all Categories
