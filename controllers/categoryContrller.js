@@ -1,9 +1,22 @@
 const Category = require('../models/category');
+const SubCategory = require('../models/subCategory');
+const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 
 exports.index = asyncHandler(async (req, res, next) => {
+  // Get list of Categories, number of total items, and number of items per category
+  const [
+    allCategories,
+    allItems,
+  ] = await Promise.all([
+    Category.find().sort({ name: 1 }).exec(),
+    Item.find().populate('category').exec(),
+  ]);
+
   res.render('index', {
     title: 'Grocery Inventory App',
+    categories: allCategories,
+    items: allItems,
   });
 });
 
