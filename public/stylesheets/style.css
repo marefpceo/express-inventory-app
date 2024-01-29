@@ -1,1 +1,1 @@
-body{padding:50px;font:14px "Lucida Grande",Helvetica,Arial,sans-serif}a{color:#00B7FF}h1{color:red}
+body{padding:50px;font:14px "Lucida Grande",Helvetica,Arial,sans-serif}.container{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;grid-template-rows:1fr 3fr}header{height:10%;grid-column:.5}aside{grid-row:.5}
