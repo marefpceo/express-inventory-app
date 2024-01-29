@@ -3,6 +3,17 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 3fr;
+}
+
+header {
+  height: 10%;
+  grid-column: 2 / 4;
+}
+
+aside {
+  grid-row: 1 / 2;
 }
