@@ -30,6 +30,7 @@ exports.category_list = asyncHandler(async (req, res, next) => {
   });
 });
 
+
 // Display detail page for a specific Category
 exports.category_detail = asyncHandler(async (req, res, next) => {
   res.send(`NOT IMPLEMENTED: Category detail: ${req.params.id}`);

@@ -10,14 +10,14 @@
             <hr>
             
             <div class='cards'>
-              <% if (category_list) { %>
-                <% category_list.forEach(category => { %>
-                  <div class='category-card'>
-                      <h3><%= category.name %></h3>
+              <% if (subcategory_list) { %>
+                <% subcategory_list.forEach(subcategory => { %>
+                  <div class='subcategory-card'>
+                      <h3><%= subcategory.name %></h3>
                   </div>
               <% }) %>
               <% } else { %>
-               <p>No Categories to display. Add a category!</p>
+               <p>No Subcategories to display. Add a Subcategory!</p>
               <% } %>
             </div>
         </section>
