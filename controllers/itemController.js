@@ -3,7 +3,12 @@ const asyncHandler = require('express-async-handler');
 
 // Displays list of all Items
 exports.item_list = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Item list');
+  const allItems = await Item.find().sort({ name: 1 });
+
+  res.render('item_list', {
+    title: 'Item List',
+    item_list: allItems,
+  });
 });
 
 // Display detail page for a specific Item

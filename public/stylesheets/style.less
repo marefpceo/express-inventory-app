@@ -4,6 +4,8 @@
 @background-mid:    #e8e8e8;
 @text-primary:      #495464;
 @text-secondary:    #bbbfca;
+@danger: red;
+
 
 * {
   box-sizing: border-box;
@@ -107,7 +109,7 @@ section {
 
 .category-card {
   width: 150px;
-  margin: 5px 0;
+  margin: 5px 0 10px 0;
   text-align: center;
   color: @text-primary;
   background-color: @text-secondary;
@@ -118,7 +120,50 @@ section {
 
 .subcategory-card {
   .category-card();
-  margin-bottom: 20px;
+}
+
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+
+  p {
+    font-weight: bold;
+    font-size: 14pt;
+  }
+}
+
+.item-list {
+  list-style: none;
+  padding-left: 0;
+  li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    width: 100%;
+    color: @text-primary;
+    background-color: @background-mid;
+    font-size: 12pt;
+  }
+
+  li:hover {
+    background-color: @text-secondary;
+  }
+
+  li p {
+    margin: 0;
+    padding: 5px 10px;
+  }
+}
+
+
+.low-limit-item {
+  border: 1px solid @danger;
+
+  p{
+    color: @danger;
+    font-weight: bold;
+  }
 }
 
 .category-card:hover,
