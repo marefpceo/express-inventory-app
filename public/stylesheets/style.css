@@ -1,1 +1,1 @@
-body{padding:50px;font:14px "Lucida Grande",Helvetica,Arial,sans-serif}.container{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;grid-template-rows:1fr 3fr}header{height:10%;grid-column:.5}aside{grid-row:.5}
+body{padding:0px;font:14px "Lucida Grande",Helvetica,Arial,sans-serif;max-height:100vh}.container{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;grid-template-rows:25vh 75vh;height:100%}header{grid-column:.5;grid-row:.5;width:100%}aside{grid-row:.33333333;grid-column:.5}
