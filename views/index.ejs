@@ -7,18 +7,21 @@
         </aside>
         <section>
             <p>Welcome to <%= title %></p>
-            <% categories.forEach(category => { %>
-            <% var itemCount = 0 %>
-                <div class='category-card'>
-                    <h3><%= category.name %></h3>
-                    <% items.forEach(item => { %>
-                        <% if (category.name === item.category.name) { %>
-                          <% itemCount++ %>
-                        <% } %>
-                    <% }) %>
-                    <p class='item-count'><%= itemCount %></p>
-                </div>
-            <% }) %>
+
+            <div class='cards'>
+                <% categories.forEach(category => { %>
+                <% var itemCount = 0 %>
+                    <div class='category-card'>
+                        <h3><%= category.name %></h3>
+                        <% items.forEach(item => { %>
+                            <% if (category.name === item.category.name) { %>
+                              <% itemCount++ %>
+                            <% } %>
+                        <% }) %>
+                        <p class='item-count'><%= itemCount %></p>
+                    </div>
+                <% }) %>
+            </div>
         
         </section>
         
