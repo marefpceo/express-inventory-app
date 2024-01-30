@@ -5,6 +5,9 @@
 @text-primary:      #495464;
 @text-secondary:    #bbbfca;
 
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -36,7 +39,14 @@ header {
 
 .header-logo {
   align-self: center;
-  text-align: center;
+  background-color: @background-light;
+  height: 100%;
+  padding: 10px 0 0 20px;
+}
+
+#logo {
+  max-height: 60px;
+ 
 }
 
 .header-title {
