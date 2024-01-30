@@ -1,0 +1,26 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+            <h2><%= title %></h2>
+            <hr>
+            
+            <!-- Enter view specific code here. -->
+            <div class='cards'>
+              <% if (category_list) { %>
+                <% category_list.forEach(category => { %>
+                  <div class='category-card'>
+                      <h3><%= category.name %></h3>
+                  </div>
+              <% }) %>
+              <% } else { %>
+               <p>No Categories to display. Add a category!</p>
+              <% } %>
+            </div>
+        </section>
+        <%- include('./partials/footer') %>
+    </div>
