@@ -1,64 +1,121 @@
+// Variables
+@background-dark:   #495464;
+@background-light:  #f4f4f2;
+@background-mid:    #e8e8e8;
+@text-primary:      #495464;
+@text-secondary:    #bbbfca;
+
+
 body {
   margin: 0;
   padding: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   max-height: 100%;
+  background-color: @background-dark;
 }
 
 .container {
   display: grid;
   grid-template-columns: 20% 26.67% 26.67% 26.67% ;
-  grid-template-rows: 10% 60% 20%;
+  grid-template-rows: 75px auto 75px;
   height: 100vh;
+  max-width: 1096px;
+  margin: 0 auto;
+  background-color: @background-light;
+  color: @text-primary;
 }
 
 header {
-  grid-column: 2 / span 5;
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-column: 1 / span 5;
   grid-row: 1  / 2;
+  background-color: @text-secondary;
+  max-height: 75px;
+}
+
+.header-logo {
+  align-self: center;
+  text-align: center;
+}
+
+.header-title {
+  padding-left: 20px;
 }
 
 aside {
-  grid-row: 2 / span 4;
-  grid-column: 1 / 2 ;
-  max-width: 250px;
+  grid-row: 2;
+  grid-column: 1;
+  padding-top: 30px;
+  background-color: @background-mid;
 }
 
 .menu {
-    padding: 20px;
-
+    padding: 0 20px;
+    
+    hr {
+      color: @background-dark;
+    }
     ul {
       padding: 0;
     }
     ul li {
       list-style: none;
+      font-size: 12pt;
+      margin: 0 0 10px 0;
     }
 
     a {
       text-decoration: none;
-      color: black;
+      color: @text-primary;
+    }
+    a:hover {
+      color: @text-secondary;
     }
 }
 
 section {
-  grid-row: 2 / span 4;
-  grid-column: 2 / span 5;
+  padding: 10px 20px;
+  grid-row: 2;
+  grid-column: 2 / span 4;
   display: flex;
   flex-direction: column;
+  background-color: @background-light;
+  hr {
+    width: 100%;
+  }
 }
 
 .cards {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-around;
   padding-top: 20px;
+  background-color: @background-light;
 }
 
 .category-card {
-  max-width: 200px;
+  width: 150px;
   margin: 5px 0;
   text-align: center;
-  border: 1px solid black;
+  color: @text-primary;
+  background-color: @text-secondary;
+  border: 1px solid @text-secondary;
   border-radius: 8px;
+  box-shadow: 1px 2px 5px @background-dark;
 }
 
+.category-card:hover {
+  background-color: @background-mid;
+}
+
+footer {
+  grid-column: 1 / span 4;
+  grid-row: 3;
+  background-color: @text-secondary;
+  
+  div p {
+    text-align: center;
+  }
+}
