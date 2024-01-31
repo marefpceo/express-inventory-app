@@ -18,14 +18,18 @@
             </div>
 
             <ul class='item-list'>
-                <% low_stock_list.forEach(item => { %>
-                  <% if (item.number_in_stock <= item.low_limit) { %>
-                    <li class='low-limit-item'>
-                      <p><%= item.name %></p> 
-                      <p><strong><%= item.number_in_stock %></strong></p>
-                    </li>
-                  <% } %>
-                <% }) %>
+                <% if (low_stock_list) { %>
+                  <% low_stock_list.forEach(item => { %>
+                    <% if (item.number_in_stock <= item.low_limit) { %>
+                      <li class='low-limit-item'>
+                        <p><%= item.name %></p> 
+                        <p><strong><%= item.number_in_stock %></strong></p>
+                      </li>
+                    <% } %>
+                  <% }) %>
+                  <% } else { %>
+                   <p>No low stock items!</p>
+                <% } %>
             </ul>
         </section>
         
