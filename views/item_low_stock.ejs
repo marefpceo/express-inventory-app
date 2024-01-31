@@ -1,0 +1,33 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+            <div class='section-header'>
+              <h2><%= title %></h2>
+              <p><a href='/inventory/items'>View Full Item List</a></p>
+            </div>
+            <hr>
+            
+            <div class='list-header'>
+              <p>Item Name</p>
+              <p>Total</p>
+            </div>
+
+            <ul class='item-list'>
+                <% low_stock_list.forEach(item => { %>
+                  <% if (item.number_in_stock <= item.low_limit) { %>
+                    <li class='low-limit-item'>
+                      <p><%= item.name %></p> 
+                      <p><strong><%= item.number_in_stock %></strong></p>
+                    </li>
+                  <% } %>
+                <% }) %>
+            </ul>
+        </section>
+        
+        <%- include('./partials/footer') %>
+    </div>

@@ -6,9 +6,12 @@
             <%- include('./partials/sidebar') %>
         </aside>
         <section>
-            <h2><%= title %></h2>
+            <div class='section-header'>
+              <h2><%= title %></h2>
+              <p><a href='/inventory/items/item_low_stock'>View Low Stock Items ONLY</a></p>
+            </div>
             <hr>
-
+            
             <span><em>*Low stock items highlighed in red</em></span>
             <div class='list-header'>
               <p>Item Name</p>

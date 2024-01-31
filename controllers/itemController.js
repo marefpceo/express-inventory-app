@@ -3,11 +3,21 @@ const asyncHandler = require('express-async-handler');
 
 // Displays list of all Items
 exports.item_list = asyncHandler(async (req, res, next) => {
-  const allItems = await Item.find().sort({ name: 1 });
+  const allItems = await Item.find().sort({ name: 1 }).exec();
 
   res.render('item_list', {
     title: 'Item List',
     item_list: allItems,
+  });
+});
+
+// Displays list of all low stock items
+exports.item_low_stock = asyncHandler(async (req, res, next) => {
+  const allItems = await Item.find().sort({ name: 1 }).exec();
+
+  res.render('item_low_stock', {
+    title: 'Low Stock Items',
+    low_stock_list: allItems,
   });
 });
 

@@ -89,4 +89,7 @@ router.get('/item/:id', item_controller.item_detail);
 // GET request for list of all Items
 router.get('/items', item_controller.item_list);
 
+// GET request for list of low stock Items
+router.get('/items/item_low_stock', item_controller.item_low_stock);
+
 module.exports = router;
