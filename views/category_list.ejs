@@ -12,9 +12,11 @@
             <div class='cards'>
               <% if (category_list) { %>
                 <% category_list.forEach(category => { %>
-                  <div class='category-card'>
-                      <h3><%= category.name %></h3>
-                  </div>
+                  <a href='<%= category.url %>'>
+                      <div class='category-card'>
+                          <h3><%= category.name %></h3>
+                      </div>
+                  </a>
               <% }) %>
               <% } else { %>
                <p>No Categories to display. Add a category!</p>
