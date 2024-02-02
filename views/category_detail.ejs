@@ -8,6 +8,7 @@
         <section>
           <div class='section-header'>
             <h2><%= title %></h2>
+            <p><%= category.cat_description %></p>
           </div>
           <hr>
           
@@ -22,7 +23,7 @@
               <% category_items.forEach(item => { %>
                 <% if (item.number_in_stock <= item.low_limit) { %>
                 <li class='low-limit-item'>
-                  <p><%= item.name %></p> 
+                  <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p> 
                   <p><strong><%= item.number_in_stock %></strong></p>
                     <% } else { %>
                       <li>
