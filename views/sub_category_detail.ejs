@@ -1,0 +1,42 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+          <div class='section-header'>
+            <h2><%= title %></h2>
+            <p><strong>Category: </strong><%= subcategory.category.name %></p>
+          </div>
+          <hr>
+          
+          <span><em>*Low stock items highlighed in red</em></span>
+          <div class='list-header'>
+            <p>Item Name</p>
+            <p>Total</p>
+          </div>
+
+          <ul class='item-list'>
+            <% if (subcategory_items) { %>
+              <% subcategory_items.forEach(item => { %>
+                <% if (item.number_in_stock <= item.low_limit) { %>
+                <li class='low-limit-item'>
+                  <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p> 
+                  <p><strong><%= item.number_in_stock %></strong></p>
+                    <% } else { %>
+                      <li>
+                        <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p>
+                      <p><strong><%= item.number_in_stock %></strong></p>
+                  <% } %>
+                </li>
+              <% }) %>
+            <% } else { %>
+             <p>No Items to display. Add a item!</p>
+            <% } %>
+          </ul>
+        </section>
+        
+        <%- include('./partials/footer') %>
+    </div>

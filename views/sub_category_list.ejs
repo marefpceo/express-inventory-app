@@ -13,7 +13,9 @@
               <% if (subcategory_list) { %>
                 <% subcategory_list.forEach(subcategory => { %>
                   <div class='subcategory-card'>
-                      <h3><%= subcategory.name %></h3>
+                      <a href='<%= subcategory.url %>'>
+                          <h3><%= subcategory.name %></h3>
+                      </a>
                   </div>
               <% }) %>
               <% } else { %>

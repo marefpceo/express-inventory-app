@@ -1,4 +1,5 @@
 const SubCategory = require('../models/subCategory');
+const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 
 // Displays list of all Categories
@@ -13,7 +14,16 @@ exports.sub_category_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Category
 exports.sub_category_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Sub Category detail: ${req.params.id}`);
+  const [subcategory, itemsInSubcategory] = await Promise.all([
+    SubCategory.findById(req.params.id).populate('category').exec(),
+    Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
+  ]);
+
+  res.render('sub_category_detail', {
+    title: `${subcategory.name} List`,
+    subcategory: subcategory,
+    subcategory_items: itemsInSubcategory,
+  });
 });
 
 // Display Category create form on GET
