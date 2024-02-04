@@ -23,7 +23,12 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Item
 exports.item_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Item detail: ${req.params.id}`);
+  const itemDetail = await Item.findById(req.params.id).populate('category sub_category');
+
+  res.render('item_detail', {
+    title: 'Detail Page',
+    itemDetail: itemDetail,
+  });
 });
 
 // Display Item create form on GET

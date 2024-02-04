@@ -1,0 +1,28 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+          <div class='section-header'>
+            <h2><%= itemDetail.name %></h2>
+            
+          </div>
+          <hr>
+          
+          <div class='item-detail'>
+            <p><strong>Brand:</strong>&nbsp;<%= itemDetail.brand %></p>
+            <p><strong>Description:</strong>&nbsp;<%= itemDetail.description %></p>
+            <p><strong>Price:</strong>&nbsp; &dollar;<%= itemDetail.price %></p>
+            <p><strong>In stock:</strong>&nbsp;<%= itemDetail.number_in_stock %></p>
+            <p><strong>Low Limit:</strong>&nbsp;<%= itemDetail.low_limit %></p>
+            <p><strong>Category:</strong>&nbsp;<%= itemDetail.category.name %></p>
+            <p><strong>Subcategory:</strong>&nbsp;<%= itemDetail.sub_category.name %></p>
+          </div>
+
+
+        </section>
+        
+        <%- include('./partials/footer') %>
