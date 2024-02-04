@@ -12,14 +12,19 @@
           </div>
           <hr>
           
-          <div class='item-detail'>
-            <p><strong>Brand:</strong>&nbsp;<%= itemDetail.brand %></p>
-            <p><strong>Description:</strong>&nbsp;<%= itemDetail.description %></p>
-            <p><strong>Price:</strong>&nbsp; &dollar;<%= itemDetail.price %></p>
-            <p><strong>In stock:</strong>&nbsp;<%= itemDetail.number_in_stock %></p>
-            <p><strong>Low Limit:</strong>&nbsp;<%= itemDetail.low_limit %></p>
-            <p><strong>Category:</strong>&nbsp;<%= itemDetail.category.name %></p>
-            <p><strong>Subcategory:</strong>&nbsp;<%= itemDetail.sub_category.name %></p>
+          <div class='item-detail-wrapper'>
+            <div class='item-detail'>
+              <p><strong>Brand:</strong>&nbsp;<%= itemDetail.brand %></p>
+              <p><strong>Description:</strong>&nbsp;<%= itemDetail.description %></p>
+              <p><strong>Price:</strong>&nbsp; &dollar;<%= itemDetail.price %></p>
+              <p><strong>In stock:</strong>&nbsp;<%= itemDetail.number_in_stock %></p>
+              <p><strong>Low Limit:</strong>&nbsp;<%= itemDetail.low_limit %></p>
+              <p><strong>Category:</strong>&nbsp;<%= itemDetail.category.name %></p>
+              <p><strong>Subcategory:</strong>&nbsp;<%= itemDetail.sub_category.name %></p>
+            </div>
+            <div class='item-image'>
+              <img src='/images/Placeholder-view.png' alt='Image placeholder'>
+            </div>
           </div>
 
 
