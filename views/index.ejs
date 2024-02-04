@@ -14,14 +14,17 @@
             <div class='cards'>
                 <% categories.forEach(category => { %>
                 <% var itemCount = 0 %>
+                <% var unitTotal = 0 %>
                     <div class='category-card'>
                         <h3><%= category.name %></h3>
                         <% items.forEach(item => { %>
                             <% if (category.name === item.category.name) { %>
                               <% itemCount++ %>
+                              <% unitTotal = unitTotal + item.number_in_stock %>
                             <% } %>
                         <% }) %>
-                        <p class='item-count'><%= itemCount %></p>
+                        <p class='item-count'>Total Items: <strong><%= itemCount %></strong></p>
+                        <p class='item-count'>Total Units: <strong><%= unitTotal %></strong></p>
                     </div>
                 <% }) %>
             </div>
