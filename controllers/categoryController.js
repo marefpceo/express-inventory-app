@@ -2,6 +2,7 @@ const Category = require('../models/category');
 const SubCategory = require('../models/subCategory');
 const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
+const { DateTime } = require('luxon');
 
 exports.index = asyncHandler(async (req, res, next) => {
   // Get list of Categories, number of total items, and number of items per category
@@ -13,10 +14,13 @@ exports.index = asyncHandler(async (req, res, next) => {
     Item.find().populate('category').exec(),
   ]);
 
+  const currentDate = DateTime.now().toLocaleString(DateTime.DATETIME_FULL);
+
   res.render('index', {
     title: 'Grocery Inventory App',
     categories: allCategories,
     items: allItems,
+    current_date_time: currentDate,
   });
 });
 
