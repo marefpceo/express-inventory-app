@@ -1,0 +1,70 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+            <h2><%= title %></h2>
+            <hr>
+            
+           <form method='post'>
+            <fieldset>
+              <span class='subcategory-note'>
+                <sub>**Create a new Category/ Subcategory if an appropriate one is not listed.</sub>
+              </span>
+              
+              <div class='fieldset-form-input'>
+                <label for='category'>Category</label>
+                  <select name='category-select' id='category-select'>
+                      <option value=''>--Select an option--</option>
+                      <% categories.forEach(category => { %>
+                       <option value=''><%= category.name %></option>
+                      <% }) %>
+                  </select>
+              </div>
+              <div class='fieldset-form-input'>
+                  <label for='subcategory'>Subcategory: </label>
+                  <select name='subcategory-select' id='subcategory-select'>
+                    <option value=''>--Select an option--</option>
+                    <% sub_categories.forEach(sub_category => { %>
+                     <option value=''><%= sub_category.name %></option>
+                    <% }) %>
+                </select>
+              </div>
+            </fieldset>
+
+            <div class='form-input'>
+              <label for='item-name'>Name:</label>
+                <input type='text' name='item-name' id='item-name'>
+            </div>
+
+            <div class='form-input'>
+              <label for='item-brand'>Brand:</label>
+                <input type='text' name='item-brand' id='item-brand'>
+            </div>
+
+            <div class='form-input'>
+              <label for='item-price'>Price:</label>
+                <input type='text' name='item-price' id='item-price'>
+            </div>
+
+            <div class='form-input'>
+              <label for='item-stock-count'>In Stock:</label>
+                <input type='text' name='item-stock-count' id='item-stock-count'>
+            </div>
+
+            <div class='form-input'>
+              <label for='item-low-limit'>Low Limit:</label>
+                <input type='text' name='item-low-limit' id='item-low-limit'>
+            </div>
+            
+            <div class='form-input'>
+                <label for='description'>Description: </label>
+                <textarea name='description' id='subcat-description' cols='30' rows='5'></textarea>
+            </div>
+           </form>
+        
+        </section>  
+<%- include('./partials/footer') %>  

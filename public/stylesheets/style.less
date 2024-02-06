@@ -43,6 +43,19 @@ form {
   flex-direction: column;
 }
 
+fieldset {
+  width: 60%;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.fieldset-form-input {
+  .form-input();
+  grid-template-columns: repeat(2, 50%);
+  width: 80%;
+}
+
 .form-input {
   display: grid;
   grid-template-columns: 25% 75%;
