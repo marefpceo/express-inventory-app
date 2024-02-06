@@ -1,0 +1,25 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+            <h2><%= title %></h2>
+            <hr>
+            
+           <form method='post'>
+            <div class='form-input'>
+                <label for='category'>Category: </label>
+                <input type='text' name='category' id='cat-name'>
+            </div>
+
+            <div class='form-input'>
+                <label for='description'>Description: </label>
+                <input type='text' name='description' id='cat-description'>
+            </div>
+           </form>
+        
+        </section>  
+<%- include('./partials/footer') %>  
