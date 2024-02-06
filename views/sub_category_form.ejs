@@ -1,0 +1,36 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+            <h2><%= title %></h2>
+            <hr>
+            
+           <form method='post'>
+            <div class='form-input'>
+              <label for='category'>Category</label>
+                <select name='category-select' id='category-select'>
+                    <option value=''>--Select an option--</option>
+                    <% categories.forEach(category => { %>
+                     <option value=''><%= category.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <span class='subcategory-note'><sub>**Create a new category if an appropriate one is not listed.</sub></span>
+            <div class='form-input'>
+                <label for='subcategory'>Subcategory: </label>
+                <input type='text' name='subcategory' id='subcat-name'>
+            </div>
+
+            <div class='form-input'>
+                <label for='description'>Description: </label>
+                <textarea name='description' id='subcat-description' cols='30' rows='5'></textarea>
+            </div>
+           </form>
+        
+        </section>  
+<%- include('./partials/footer') %>  
