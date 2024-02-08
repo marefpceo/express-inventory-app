@@ -12,6 +12,7 @@
           </div>
           <hr>
           
+          <% if (category_items.length > 0) { %>
           <span><em>*Low stock items highlighed in red</em></span>
           <div class='list-header'>
             <p>Item Name</p>
@@ -19,7 +20,7 @@
           </div>
 
           <ul class='item-list'>
-            <% if (category_items) { %>
+           
               <% category_items.forEach(item => { %>
                 <% if (item.number_in_stock <= item.low_limit) { %>
                 <li class='low-limit-item'>
