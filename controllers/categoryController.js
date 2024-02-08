@@ -90,7 +90,7 @@ exports.category_create_post = [
     return;
   } else {
     await category.save();
-    res.redirect(category.url);
+    res.redirect('/inventory/categories');
   }
 }),
 ];
