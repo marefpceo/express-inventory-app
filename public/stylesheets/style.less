@@ -67,6 +67,24 @@ fieldset {
   margin: 0 0 10px 10px;
 }
 
+button {
+  width: 100px;
+  height: 35px;
+  border-radius: 5px;
+  border: 1px solid @background-mid;
+  background-color: @background-light;
+  box-shadow: 1px 2px 5px @background-dark;
+}
+
+button:hover {
+  background-color: @background-mid;
+  cursor: pointer;
+}
+
+button:active {
+  scale: 0.9;
+}
+
 
 /* ======== PRIMARY  ======== */
 
@@ -122,8 +140,8 @@ section {
   margin: 5px 0 10px 0;
   text-align: center;
   color: @text-primary;
-  background-color: @text-secondary;
-  border: 1px solid @text-secondary;
+  background-color: @background-mid;
+  border: 1px solid @background-mid;
   border-radius: 8px;
   box-shadow: 1px 2px 5px @background-dark;
 }
@@ -131,6 +149,8 @@ section {
 .category-card,
 .subcategory-card {
   .snapshot-card();
+  background-color: @text-secondary;
+  border: 1px solid @text-secondary;
 }
 
 .item-list {

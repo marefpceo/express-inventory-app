@@ -28,7 +28,7 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Item
 exports.item_detail = asyncHandler(async (req, res, next) => {
-  const itemDetail = await Item.findById(req.params.id).populate('category sub_category');
+  const itemDetail = await Item.findById(req.params.id).populate('category sub_category').exec();
 
   res.render('item_detail', {
     title: 'Detail Page',

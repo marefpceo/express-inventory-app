@@ -5,7 +5,7 @@ const asyncHandler = require('express-async-handler');
 
 // Displays list of all Categories
 exports.sub_category_list = asyncHandler(async (req, res, next) => {
-  const allSubcategories = await SubCategory.find().sort({ name: 1 });
+  const allSubcategories = await SubCategory.find().sort({ name: 1 }).exec();
   
   res.render('sub_category_list', {
     title: 'Subcategory List',
@@ -31,7 +31,7 @@ exports.sub_category_detail = asyncHandler(async (req, res, next) => {
 
 // Display Category create form on GET
 exports.sub_category_create_get = asyncHandler(async (req, res, next) => {
-  const allCategories = await Category.find().sort({ name: 1 });
+  const allCategories = await Category.find().sort({ name: 1 }).exec();
 
   res.render('sub_category_form', {
     title: 'Create Subcategory',

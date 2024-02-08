@@ -3,6 +3,7 @@ const SubCategory = require('../models/subCategory');
 const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { DateTime } = require('luxon');
+const { body, validationResult } = require('express-validator');
 
 
 exports.index = asyncHandler(async (req, res, next) => {
@@ -28,7 +29,7 @@ exports.index = asyncHandler(async (req, res, next) => {
 
 // Displays list of all Categories
 exports.category_list = asyncHandler(async (req, res, next) => {
-  const allCategories = await Category.find().sort({ name: 1 });
+  const allCategories = await Category.find().sort({ name: 1 }).exec();
 
   res.render('category_list', {
     title: 'Category List',
@@ -61,9 +62,38 @@ exports.category_create_get = asyncHandler(async (req, res, next) => {
 
 
 // Handle Category create on POST
-exports.category_create_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Category create POST');
-});
+exports.category_create_post = [
+  body('name')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Category must be at least 3 characters')
+    .escape(),
+  body('cat_description')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Description must be at least 3 characters')
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const category = new Category({
+      name: req.body.name,
+      cat_description: req.body.cat_description,
+    });
+
+  if (!errors.isEmpty()) {
+    res.render('category_form', {
+      title: 'Create Category',
+      category: category,
+      errors: errors.array(),
+    });
+    return;
+  } else {
+    await category.save();
+    res.redirect(category.url);
+  }
+}),
+];
 
 
 // Display Category update form on GET

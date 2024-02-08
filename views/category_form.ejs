@@ -11,15 +11,28 @@
             
            <form method='post'>
             <div class='form-input'>
-                <label for='category'>Category: </label>
-                <input type='text' name='category' id='cat-name'>
+                <label for='name'>Category: </label>
+                <input type='text' name='name' id='name' required 
+                    value='<%= typeof category === 'undefined' ? '' : category.name %>'>
             </div>
 
             <div class='form-input'>
-                <label for='cat-description'>Description: </label>
-                <textarea name='cat-description' id='cat-description' cols='30' rows='5'></textarea>
+                <label for='cat_description'>Description: </label>
+                <textarea name='cat_description' id='cat_description' cols='30' rows='5' required
+                    value='<%= typeof category === 'undefined' ? '' : category.cat_description %>'>
+                </textarea>
             </div>
+
+            <button type='submit'>Submit</button>
            </form>
+
+           <% if (typeof errors !== 'undefined') { %>
+            <ul>
+                <% errors.forEach(error => { %>
+                 <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+           <% } %>
         
         </section>  
 <%- include('./partials/footer') %>  
