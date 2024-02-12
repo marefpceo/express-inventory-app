@@ -55,14 +55,16 @@ exports.sub_category_create_post = [
   
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const allCategories = await Category.find().sort({ name: 1 }).exec();
-    const subcategory = new SubCategory({
-      name: req.body.subcatName,
-      category: req.body.categorySelect,
-    });
+    const [ allCategories, subcategory ] = await Promise.all([
+      Category.find().sort({ name: 1 }).exec(),
+      new SubCategory({
+        name: req.body.subcatName,
+        category: await Category.findById(req.body.categorySelect),
+      }),
+    ]);
+
 
   if (!errors.isEmpty()) {
-    // res.json({ requestBody: req.body });
     res.render('sub_category_form', {
       title: 'Create Subcategory',
       subcategory: subcategory,
@@ -70,12 +72,10 @@ exports.sub_category_create_post = [
       errors: errors.array(),
     });
     return;
-  } else {
-    await subcategory.save();
-    res.redirect('/inventory/subcategories');
-  }
-
-  res.send('NOT IMPLEMENTED: Sub Category create POST');
+    } else {
+      await subcategory.save();
+      res.redirect('/inventory/subcategories');
+    }
   }),
 ];
 

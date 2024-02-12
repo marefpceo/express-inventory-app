@@ -26,17 +26,18 @@
                     <select name='categorySelect' id='categorySelect' required>
                         <option value=''>--Select an option--</option>
                         <% categories.forEach(listItem => { %>
-                         <option value='<%= listItem.name %>'><%= listItem.name %></option>
+                         <option value='<%= listItem._id %>'><%= listItem.name %></option>
                         <% }) %>
                     </select>
                     <% } else { %>
                         <select name='categorySelect' id='categorySelect' required>
                             <option value=''>--Select an option--</option>
                             <% categories.forEach(listItem => { %>
-                                <% if (listItem.name == subcategory.category) { %>
-                                    <option value='<%= listItem.name %>' selected><%= listItem.name %></option>
+                                <% if (listItem._id.toString() === subcategory.category._id.toString()) { %>
+                                    <option value='<%= listItem._id %>' selected><%= listItem.name %></option>
+                                    <% } else { %>
+                                        <option value='<%= listItem._id %>'><%= listItem.name %></option>
                                 <% } %>
-                             <option value='<%= listItem.name %>'><%= listItem.name %></option>
                             <% }) %>
                         </select>
                 <% } %>
