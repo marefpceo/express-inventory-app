@@ -11,29 +11,48 @@
             
            <form method='post'>
 
+            <div class='form-input'>
+                <label for='subcatName'>Subcategory: </label>
+                <input type='text' name='subcatName' id='subcatName' required
+                    value='<%= typeof subcategory === 'undefined' ? '' : subcategory.name %>'>
+            </div>
+
             <span class='subcategory-note'>
                 <sub>**Create a new category if an appropriate one is not listed.</sub>
             </span>
             <div class='form-input'>
-              <label for='category'>Category</label>
-                <select name='category-select' id='category-select'>
-                    <option value=''>--Select an option--</option>
-                    <% categories.forEach(category => { %>
-                     <option value=''><%= category.name %></option>
-                    <% }) %>
-                </select>
+              <label for='categorySelect'>Category</label>
+                <% if (typeof subcategory === 'undefined') { %>
+                    <select name='categorySelect' id='categorySelect' required>
+                        <option value=''>--Select an option--</option>
+                        <% categories.forEach(listItem => { %>
+                         <option value='<%= listItem.name %>'><%= listItem.name %></option>
+                        <% }) %>
+                    </select>
+                    <% } else { %>
+                        <select name='categorySelect' id='categorySelect' required>
+                            <option value=''>--Select an option--</option>
+                            <% categories.forEach(listItem => { %>
+                                <% if (listItem.name == subcategory.category) { %>
+                                    <option value='<%= listItem.name %>' selected><%= listItem.name %></option>
+                                <% } %>
+                             <option value='<%= listItem.name %>'><%= listItem.name %></option>
+                            <% }) %>
+                        </select>
+                <% } %>
+
             </div>
 
-            <div class='form-input'>
-                <label for='subcategory'>Subcategory: </label>
-                <input type='text' name='subcategory' id='subcat-name'>
-            </div>
-
-            <div class='form-input'>
-                <label for='description'>Description: </label>
-                <textarea name='description' id='subcat-description' cols='30' rows='5'></textarea>
-            </div>
+            <button type='submit'>Submit</button>
            </form>
+
+           <% if (typeof errors !== 'undefined') { %>
+            <ul>
+                <% errors.forEach(error => { %>
+                 <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+           <% } %>
         
         </section>  
 <%- include('./partials/footer') %>  

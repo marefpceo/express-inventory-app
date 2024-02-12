@@ -8,11 +8,14 @@
         <section>
           <div class='section-header'>
             <h2><%= title %></h2>
-            <p><strong>Category: </strong><%= subcategory.category.name %></p>
+            
+            <% if (subcategory_items.length > 0) { %>
+              <p><strong>Category: </strong><%= subcategory.category.name %></p>
+            <% } %>
           </div>
           <hr>
           
-          <% if (subcategory_items) { %>
+          <% if (subcategory_items.length > 0) { %>
           <span><em>*Low stock items highlighed in red</em></span>
           <div class='list-header'>
             <p>Item Name</p>

@@ -2,6 +2,7 @@ const SubCategory = require('../models/subCategory');
 const Category = require('../models/category');
 const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
+const { body, validationResult } = require('express-validator');
 
 // Displays list of all Categories
 exports.sub_category_list = asyncHandler(async (req, res, next) => {
@@ -41,9 +42,42 @@ exports.sub_category_create_get = asyncHandler(async (req, res, next) => {
 
 
 // Handle Category create on POST
-exports.sub_category_create_post = asyncHandler(async (req, res, next) => {
+exports.sub_category_create_post = [
+  body('subcatName')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Subcategory must contain at least 3 characters')
+    .escape(),
+  body('categorySelect')
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const allCategories = await Category.find().sort({ name: 1 }).exec();
+    const subcategory = new SubCategory({
+      name: req.body.subcatName,
+      category: req.body.categorySelect,
+    });
+
+  if (!errors.isEmpty()) {
+    // res.json({ requestBody: req.body });
+    res.render('sub_category_form', {
+      title: 'Create Subcategory',
+      subcategory: subcategory,
+      categories: allCategories,
+      errors: errors.array(),
+    });
+    return;
+  } else {
+    await subcategory.save();
+    res.redirect('/inventory/subcategories');
+  }
+
   res.send('NOT IMPLEMENTED: Sub Category create POST');
-});
+  }),
+];
 
 
 // Display Category update form on GET

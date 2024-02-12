@@ -66,12 +66,12 @@ exports.category_create_post = [
   body('name')
     .trim()
     .isLength({ min: 3 })
-    .withMessage('Category must be at least 3 characters')
+    .withMessage('Category must contain at least 3 characters')
     .escape(),
   body('cat_description')
     .trim()
     .isLength({ min: 3 })
-    .withMessage('Description must be at least 3 characters')
+    .withMessage('Description must contain at least 3 characters')
     .escape(),
 
   asyncHandler(async (req, res, next) => {
