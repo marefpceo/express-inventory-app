@@ -10,20 +10,26 @@
             <hr>
             
            <form method='post'>
-            <div class='form-input'>
-                <label for='name'>Category: </label>
-                <input type='text' name='name' id='name' required 
-                    value='<%= typeof category === 'undefined' ? '' : category.name %>'>
+            <div class='form-section-single'>
+                <div class='form-input'>
+                    <label for='name'>Category: </label>
+                    <input type='text' name='name' id='name' required
+                        value='<%= typeof category === 'undefined' ? '' : category.name %>'>
+                </div>
+                <div class='form-input'>
+                    <label for='cat_description'>Description: </label>
+                    <textarea name='cat_description' id='cat_description' cols='30' rows='5' required
+                        value='<%= typeof category === 'undefined' ? '' : category.cat_description %>'>
+                    </textarea>
+                </div>
             </div>
 
-            <div class='form-input'>
-                <label for='cat_description'>Description: </label>
-                <textarea name='cat_description' id='cat_description' cols='30' rows='5' required
-                    value='<%= typeof category === 'undefined' ? '' : category.cat_description %>'>
-                </textarea>
+            <div class='button-div'>
+                <button type='submit'>Submit</button>
+                <button>Delete</button>
+                <button>update</button>
             </div>
-
-            <button type='submit'>Submit</button>
+            
            </form>
 
            <% if (typeof errors !== 'undefined') { %>

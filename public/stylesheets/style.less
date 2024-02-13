@@ -53,18 +53,24 @@ fieldset {
 .fieldset-form-input {
   .form-input();
   grid-template-columns: repeat(2, 50%);
-  width: 80%;
 }
 
 .form-input {
   display: grid;
   grid-template-columns: 25% 75%;
   margin: 10px;
-  width: 50%;
+  width: 80%;
 }
 
-.subcategory-note {
-  margin: 0 0 10px 10px;
+.form-section-single{
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+
+.form-section-double{
+  display: grid;
+  grid-template-columns: 60% 40%;
 }
 
 button {
@@ -74,6 +80,11 @@ button {
   border: 1px solid @background-mid;
   background-color: @background-light;
   box-shadow: 1px 2px 5px @background-dark;
+  margin: 0 40px;
+}
+
+.button-div {
+  margin: 10% auto;
 }
 
 button:hover {
