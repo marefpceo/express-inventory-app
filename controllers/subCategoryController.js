@@ -88,14 +88,58 @@ exports.sub_category_create_post = [
 
 // Display Category update form on GET
 exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Sub Category update GET');
+  const subcategory = await SubCategory.findById(req.params.id).exec();
+  const categories = await Category.find().sort({ name: 1 }).exec();
+
+  if(subcategory === null) {
+    const err = new Error('Subcategory not found!');
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render('sub_category_update', {
+    title: 'Update Subcategory',
+    categories: categories,
+    subcategory: subcategory,
+  });
 });
 
 
 // Handle Category update form on POST
-exports.sub_category_update_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Sub Category update POST');
-});
+exports.sub_category_update_post = [
+  body('subcatName')
+  .trim()
+  .isLength({ min: 3 })
+  .withMessage('Subcategory must contain at least 3 characters')
+  .escape(),
+body('categorySelect')
+  .trim()
+  .isLength({ min: 3 })
+  .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const categories = await Category.find().sort({ name: 1 }).exec();
+    const subcategory = new SubCategory({
+      name: req.body.subcatName,
+      category: await Category.findById(req.body.categorySelect),
+      _id: req.params.id,
+    });
+
+    if(!errors.isEmpty()) {
+      res.render('sub_category_update', {
+        title: 'Update Subcategory',
+        subcategory: subcategory,
+        categories: categories,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      const updatedSubCategory = await SubCategory.findByIdAndUpdate(req.params.id, subcategory, {}).exec();
+      res.redirect(updatedSubCategory.url);
+    }
+  })
+];
 
 
 // Display Category delete form on GET
