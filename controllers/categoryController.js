@@ -45,6 +45,12 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
     Item.find({ category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
   ]); 
 
+  if (category === null) {
+    const err = new Error('Category not found!');
+    err.status = 404;
+    return next(err);
+  }
+
   res.render('category_detail', {
     title: `${category.name} Items`,
     category: category,

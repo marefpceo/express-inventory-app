@@ -31,6 +31,12 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
 exports.item_detail = asyncHandler(async (req, res, next) => {
   const itemDetail = await Item.findById(req.params.id).populate('category sub_category').exec();
 
+  if (itemDetail === null) {
+    const err = new Error('Item not found!');
+    err.status = 404;
+    return next(err);
+  }
+
   res.render('item_detail', {
     title: 'Detail Page',
     itemDetail: itemDetail,

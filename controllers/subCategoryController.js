@@ -17,10 +17,16 @@ exports.sub_category_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Category
 exports.sub_category_detail = asyncHandler(async (req, res, next) => {
-  const [subcategory, itemsInSubcategory] = await Promise.all([
+  const [ subcategory, itemsInSubcategory ] = await Promise.all([
     SubCategory.findById(req.params.id).populate('category').exec(),
     Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
   ]);
+
+  if (subcategory === null) {
+    const err = new Error('Subcategory not found!');
+    err.status = 404;
+    return next(err);
+  }
 
   res.render('sub_category_detail', {
     title: `${subcategory.name} List`,
