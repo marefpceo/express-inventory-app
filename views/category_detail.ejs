@@ -7,9 +7,20 @@
         </aside>
         <section>
           <div class='section-header'>
-            <h2><%= title %></h2>
-            <p><%= category.cat_description %></p>
+            <div>
+              <h2><%= title %></h2>
+              <p><%= category.cat_description %></p>
+            </div>
+            <div>
+              <button type='button'>
+                <a href='<%= category.url %>/update'>Update Category</a>
+              </button>
+              <button type='button'>
+                <a href='<%= category.url %>/delete'>Delete Category</a>
+              </button>
+            </div>
           </div>
+          
           <hr>
           
           <% if (category_items.length > 0) { %>

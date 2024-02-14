@@ -18,9 +18,7 @@
                 </div>
                 <div class='form-input'>
                     <label for='cat_description'>Description: </label>
-                    <textarea name='cat_description' id='cat_description' cols='30' rows='5' required
-                        value='<%= typeof category === 'undefined' ? '' : category.cat_description %>'>
-                    </textarea>
+                    <textarea name='cat_description' id='cat_description' cols='30' rows='5' required><%= typeof category === 'undefined' ? '' : category.cat_description%></textarea>
                 </div>
             </div>
 

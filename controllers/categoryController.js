@@ -96,7 +96,7 @@ exports.category_create_post = [
     return;
   } else {
     await category.save();
-    res.redirect('/inventory/categories');
+    res.redirect(category.url);
   }
 }),
 ];
@@ -104,14 +104,55 @@ exports.category_create_post = [
 
 // Display Category update form on GET
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Category update GET');
+  const category = await Category.findById(req.params.id).exec();
+
+  if(category === null) {
+    const err = new Error('Category not found!');
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render('category_update', {
+    title: 'Update Category',
+    category: category,
+  });
 });
 
 
 // Handle Category update form on POST
-exports.category_update_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Category update POST');
-});
+exports.category_update_post = [
+  body('name')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Category must contain at least 3 characters')
+    .escape(),
+  body('cat_description')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Description must contain at least 3 characters')
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const category = new Category({
+      name: req.body.name,
+      cat_description: req.body.cat_description,
+      _id: req.params.id,
+    });
+
+    if(!errors.isEmpty()) {
+      res.render('category_update', {
+        title: 'Update Category',
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      const updatedCategory = await Category.findByIdAndUpdate(req.params.id, category, {})
+      res.redirect(updatedCategory.url);
+    }
+  }),
+];
 
 
 // Display Category delete form on GET
