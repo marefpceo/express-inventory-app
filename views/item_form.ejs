@@ -14,60 +14,82 @@
               <div>
                 <div class='form-input'>
                   <label for='itemName'>Name:</label>
-                    <input type='text' name='itemName' id='itemName'>
+                    <input type='text' name='itemName' id='itemName' required
+                      value='<%= typeof item === 'undefined' ? '' : item.name %>'>
                 </div>
                 <div class='form-input'>
                   <label for='itemBrand'>Brand:</label>
-                    <input type='text' name='itemBrand' id='itemBrand'>
+                    <input type='text' name='itemBrand' id='itemBrand' required
+                    value='<%= typeof item === 'undefined' ? '' : item.brand %>'>
                 </div>
                 <div class='form-input'>
                   <label for='itemPrice'>Price:</label>
-                    <input type='text' name='itemPrice' id='itemPrice'>
+                    <input type='number' name='itemPrice' id='itemPrice' min='0' step='.01' required
+                    value='<%= typeof item === 'undefined' ? '' : item.price %>'>
                 </div>
                 <div class='form-input'>
                   <label for='itemStockCount'>In Stock:</label>
-                    <input type='text' name='itemStockCount' id='itemStockCount'>
+                    <input type='number' name='itemStockCount' id='itemStockCount' min='0' required
+                    value='<%= typeof item === 'undefined' ? '' : item.number_in_stock %>'>
                 </div>
                 <div class='form-input'>
                   <label for='itemLowLimit'>Low Limit:</label>
-                    <input type='text' name='itemLowLimit' id='itemLowLimit'>
+                    <input type='number' name='itemLowLimit' id='itemLowLimit' min='0' required
+                    value='<%= typeof item === 'undefined' ? '' : item.low_limit %>'>
                 </div>
               
                 <div class='form-input'>
-                    <label for='subcatDescription'>Description: </label>
-                    <textarea name='subcatDescription' id='subcatDescription' cols='30' rows='5'></textarea>
+                    <label for='itemDescription'>Description: </label>
+                    <textarea name='itemDescription' id='itemDescription' cols='30' rows='5' required><%= typeof item === 'undefined' ? '' : item.description %></textarea>
                 </div>
               </div>
+
               <div>
                 <span class='subcategory-note'>
                   <sub>**Create a new Category/ Subcategory if an appropriate one is not listed.</sub>
                 </span>
             
-                <div class='fieldset-form-input'>
-                  <label for='categorySelect'>Category</label>
-                    <select name='categorySelect' id='categorySelect'>
-                        <option value=''>--Select an option--</option>
-                        <% categories.forEach(category => { %>
-                          <option value=''><%= category.name %></option>
-                        <% }) %>
-                    </select>
-                </div>
-                <div class='fieldset-form-input'>
-                    <label for='subcategorySelect'>Subcategory: </label>
-                    <select name='subcategorySelect' id='subcategorySelect'>
-                      <option value=''>--Select an option--</option>
-                      <% sub_categories.forEach(sub_category => { %>
-                        <option value=''><%= sub_category.name %></option>
-                      <% }) %>
-                  </select>
-                </div>
+                  <div class='fieldset-form-input'>
+                    <label for='categorySelect'>Category/ Subcategory</label>
+                      <select name='categorySelect' id='categorySelect' required>
+                          
+                          <% if (typeof item === 'undefined') { %>
+                            <option value=''>--Select an option--</option>
+                            <% categories.forEach(category => { %>
+                              <optgroup label='<%= category.name %>'>
+                                <% sub_categories.forEach(subcategory => { %>
+                                 <% if (subcategory.category._id.toString() === category._id.toString()) { %>
+                                  <option value='<%= subcategory._id %>'><%= subcategory.name %></option>
+                                 <% } %>
+                                <% }) %>
+                              </optgroup>
+                            <% }) %>
+                            <% } else { %>
+                              <option value=''>--Select an option--</option>
+                              <% categories.forEach(category => { %>
+                                <optgroup label='<%= category.name %>'>
+                                  <% sub_categories.forEach(subcategory => { %>
+                                   <% if (subcategory.category._id.toString() === category._id.toString()) { %>
+                                    <% if (item.sub_category._id.toString() === subcategory._id.toString()) { %>
+                                      <option value='<%= subcategory._id %>' selected><%= subcategory.name %></option>
+                                    <% } %>
+                                    <option value='<%= subcategory._id %>'><%= subcategory.name %></option>
+                                   <% } %>
+                                  <% }) %>
+                                </optgroup>
+                              <% }) %>
+                          <% } %>
+                          
+                      </select>
+                  </div>
+
               </div>
             </div>
 
             <div class='button-div'>
               <button type='submit'>Submit</button>
               <button>Delete</button>
-              <button>update</button>
+              <button>Update</button>
             </div>
            </form>
 
@@ -78,6 +100,6 @@
                 <% }) %>
             </ul>
            <% } %>
-        
+
         </section>  
 <%- include('./partials/footer') %>  

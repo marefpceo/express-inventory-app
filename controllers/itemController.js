@@ -2,6 +2,7 @@ const Item = require('../models/item');
 const Category = require('../models/category');
 const SubCategory = require('../models/subCategory');
 const asyncHandler = require('express-async-handler');
+const { body, validationResult } = require('express-validator');
 
 
 // Displays list of all Items
@@ -53,9 +54,72 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 
 
 // Handle Item create on POST
-exports.item_create_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Item create POST');
-});
+exports.item_create_post = [
+  body('itemName')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Name must contain a minimum of 3 characters')
+    .escape(),
+  body('itemBrand')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Brand must contain a minimum of 3 characters')
+    .escape(),
+  body('itemPrice')
+    .trim()
+    .isCurrency({ allow_negatives: false })
+    .withMessage('Price must be a numeric value')
+    .escape(),
+  body('itemStockCount')
+    .trim()
+    .isNumeric()
+    .withMessage('In Stock must be a numeric value 0 or greater')
+    .escape(),
+  body('itemLowLimit')
+    .trim()
+    .isNumeric()
+    .withMessage('Low Limit must be a numeric value 0 or greater')
+    .escape(),
+  body('itemDescription')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Description must contain a minimum of 3 characters')
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const [ allCategories, allSubCategories, item ] = await Promise.all([
+      Category.find().sort({ name: 1 }).exec(),
+      SubCategory.find().sort({ name: 1 }).exec(),
+      new Item({
+        name: req.body.itemName,
+        brand: req.body.itemBrand,
+        price: req.body.itemPrice,
+        number_in_stock: req.body.itemStockCount,
+        low_limit: req.body.itemLowLimit,
+        description: req.body.itemDescription,
+        sub_category: await SubCategory.findById(req.body.categorySelect).exec(),
+        category: await Category.findById(
+          (await SubCategory.findById(req.body.categorySelect).exec()).category
+          ),
+      }),
+    ]);
+
+    if (!errors.isEmpty()) {
+      res.render('item_form', {
+        title: 'Create Item',
+        item: item,
+        categories: allCategories,
+        sub_categories: allSubCategories,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await item.save();
+      res.redirect(item.url);
+    }
+  })
+];
 
 
 // Display Item update form on GET
