@@ -29,9 +29,9 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Item
 exports.item_detail = asyncHandler(async (req, res, next) => {
-  const itemDetail = await Item.findById(req.params.id).populate('category sub_category').exec();
+  const item = await Item.findById(req.params.id).populate('category sub_category').exec();
 
-  if (itemDetail === null) {
+  if (item === null) {
     const err = new Error('Item not found!');
     err.status = 404;
     return next(err);
@@ -39,7 +39,7 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
 
   res.render('item_detail', {
     title: 'Detail Page',
-    itemDetail: itemDetail,
+    item: item,
   });
 });
 
@@ -130,14 +130,87 @@ exports.item_create_post = [
 
 // Display Item update form on GET
 exports.item_update_get = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Item update GET');
+  const [ item, categories, subcategories ] = await Promise.all([
+    Item.findById(req.params.id).exec(),
+    Category.find().sort({ name: 1 }).exec(),
+    SubCategory.find().sort({ name: 1 }).exec(),
+  ]);
+  
+  res.render('item_update', {
+    title: 'Update Item',
+    item: item,
+    categories: categories,
+    sub_categories: subcategories,
+  });
 });
 
 
 // Handle Item update form on POST
-exports.item_update_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Item update POST');
-});
+exports.item_update_post = [
+  body('itemName')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Name must contain a minimum of 3 characters'),
+  body('itemBrand')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Brand must contain a minimum of 3 characters')
+    .escape(),
+  body('itemPrice')
+    .trim()
+    .isCurrency({ allow_negatives: false })
+    .withMessage('Price must be a numeric value')
+    .escape(),
+  body('itemStockCount')
+    .trim()
+    .isNumeric()
+    .withMessage('In Stock must be a numeric value 0 or greater')
+    .escape(),
+  body('itemLowLimit')
+    .trim()
+    .isNumeric()
+    .withMessage('Low Limit must be a numeric value 0 or greater')
+    .escape(),
+  body('itemDescription')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Description must contain a minimum of 3 characters')
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const [ categories, sub_categories, item ] = await Promise.all([
+      Category.find().sort({ name: 1 }).exec(),
+      SubCategory.find().sort({ name: 1 }).exec(),
+      new Item({
+        name: req.body.itemName,
+        brand: req.body.itemBrand,
+        price: req.body.itemPrice,
+        number_in_stock: req.body.itemStockCount,
+        low_limit: req.body.itemLowLimit,
+        description: req.body.itemDescription,
+        sub_category: await SubCategory.findById(req.body.categorySelect).exec(),
+        category: await Category.findById(
+          (await SubCategory.findById(req.body.categorySelect).exec()).category),
+        _id: req.params.id,
+      })
+    ]);
+    
+    if(!errors.isEmpty()) {
+      res.render('item_update', {
+        title: 'Update Item',
+        item: item,
+        categories: categories,
+        sub_categories: sub_categories,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {}).exec();
+      res.redirect(updatedItem.url);
+    }
+  })
+];
 
 
 // Display Item delete form on GET

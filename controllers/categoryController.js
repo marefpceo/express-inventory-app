@@ -148,7 +148,7 @@ exports.category_update_post = [
       });
       return;
     } else {
-      const updatedCategory = await Category.findByIdAndUpdate(req.params.id, category, {})
+      const updatedCategory = await Category.findByIdAndUpdate(req.params.id, category, {}).exec()
       res.redirect(updatedCategory.url);
     }
   }),

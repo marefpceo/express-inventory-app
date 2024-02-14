@@ -7,28 +7,37 @@
         </aside>
         <section>
           <div class='section-header'>
-            <h2><%= itemDetail.name %></h2>
-            <% if (itemDetail.number_in_stock <= itemDetail.low_limit) { %>
+            <h2><%= item.name %></h2>
+            <% if (item.number_in_stock <= item.low_limit) { %>
              <div class='low-limit-button'>
                <p>Low Stock. Order Soon</p>
              </div>
             <% } %>
+            <div>
+              <button type='button'>
+                <a href='<%= item.url %>/update'>Update Item</a>
+              </button>
+              <button type='button'>
+                <a href='<%= item.url %>/delete'>Delete Item</a>
+              </button>
+            </div>
+
           </div>
           <hr>
           
           <div class='item-detail-wrapper'>
             <div class='item-detail'>
-              <p><strong>Brand:</strong>&nbsp;<%= itemDetail.brand %></p>
-              <p><strong>Description:</strong>&nbsp;<%= itemDetail.description %></p>
-              <p><strong>Price:</strong>&nbsp; &dollar;<%= itemDetail.price %></p>
-              <% if (itemDetail.number_in_stock <= itemDetail.low_limit) { %>
-                <p class='low-limit-detail'><strong>In stock:</strong>&nbsp;<%= itemDetail.number_in_stock %></p>
+              <p><strong>Brand:</strong>&nbsp;<%= item.brand %></p>
+              <p><strong>Description:</strong>&nbsp;<%= item.description %></p>
+              <p><strong>Price:</strong>&nbsp; &dollar;<%= item.price %></p>
+              <% if (item.number_in_stock <= item.low_limit) { %>
+                <p class='low-limit-detail'><strong>In stock:</strong>&nbsp;<%= item.number_in_stock %></p>
                 <% } else { %>
-                  <p><strong>In stock:</strong>&nbsp;<%= itemDetail.number_in_stock %></p>
+                  <p><strong>In stock:</strong>&nbsp;<%= item.number_in_stock %></p>
               <% } %>
-              <p><strong>Low Limit:</strong>&nbsp;<%= itemDetail.low_limit %></p>
-              <p><strong>Category:</strong>&nbsp;<%= itemDetail.category.name %></p>
-              <p><strong>Subcategory:</strong>&nbsp;<%= itemDetail.sub_category.name %></p>
+              <p><strong>Low Limit:</strong>&nbsp;<%= item.low_limit %></p>
+              <p><strong>Category:</strong>&nbsp;<%= item.category.name %></p>
+              <p><strong>Subcategory:</strong>&nbsp;<%= item.sub_category.name %></p>
             </div>
             <div class='item-image'>
               <img src='/images/Placeholder-view.png' alt='Image placeholder'>
