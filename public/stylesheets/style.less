@@ -6,7 +6,7 @@
 @background-mid:    #e8e8e8;
 @text-primary:      #495464;
 @text-secondary:    #bbbfca;
-@danger: red;
+@danger: #ff000065;
 
 
 * {
@@ -71,6 +71,16 @@ fieldset {
 .form-section-double{
   display: grid;
   grid-template-columns: 60% 40%;
+}
+
+.delete-button-div button {
+  color: @text-primary;
+  font-size: 11pt;
+}
+
+.delete-button {
+  border-color: @danger;
+  background-color: @danger;
 }
 
 button {

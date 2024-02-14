@@ -150,7 +150,8 @@ exports.item_update_post = [
   body('itemName')
     .trim()
     .isLength({ min: 3 })
-    .withMessage('Name must contain a minimum of 3 characters'),
+    .withMessage('Name must contain a minimum of 3 characters')
+    .escape(),
   body('itemBrand')
     .trim()
     .isLength({ min: 3 })
@@ -215,11 +216,25 @@ exports.item_update_post = [
 
 // Display Item delete form on GET
 exports.item_delete_get = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Item delete GET');
+  const item = await Item.findById(req.params.id).exec();
+
+  if(item === null) {
+    const err = Error('Item not found!');
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render('item_delete', {
+    title: 'Delete Item',
+    item: item,
+    item_category: await Category.findById(item.category).exec(),
+    item_subcategory: await SubCategory.findById(item.sub_category).exec(),
+  });
 });
 
 
 // Handle Item delete on POST
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Item delete POST');
+  await Item.findByIdAndDelete(req.params.id).exec();
+  res.redirect('/inventory/items');
 });
