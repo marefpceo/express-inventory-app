@@ -1,0 +1,89 @@
+<%- include('./partials/head') %>
+    
+    <div class='container'>
+        <%- include('./partials/header') %>
+        <aside>
+            <%- include('./partials/sidebar') %>
+        </aside>
+        <section>
+          <div class='section-header'>
+            <h2><%= title %></h2>
+          </div>
+
+          <% if ((category_items.length > 0) || (subcategory_list.length > 0)) { %>
+          <hr>
+          <span><em>*Listed subcategories and/ or items must be <strong>recategorized</strong> or <strong>deleted</strong> prior to deleting  
+            the <strong><%= category.name %></strong> category:
+          </em></span>
+
+          <% if (category_items.length > 0) { %>
+            <div class='list-header'>
+              <p>Item</p>
+            </div>
+          <% } %>
+          
+          <ul class='item-list'>
+           
+            <% category_items.forEach(item => { %>
+              <% if (item.number_in_stock <= item.low_limit) { %>
+              <li class='low-limit-item'>
+                <a href='<%= item.url %>'>
+                  <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p>
+                  <p><strong><%= item.number_in_stock %></strong></p>
+                </a>
+              </li>
+                <% } else { %>
+                <li>
+                  <a href='<%= item.url %>'>
+                    <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p>
+                    <p><strong><%= item.number_in_stock %></strong></p>
+                  </a>
+                </li>
+              <% } %>
+            <% }) %>
+          </ul>
+
+          <% if (subcategory_list.length > 0) { %>
+            <div class='list-header'>
+              <p>Subcategory</p>
+            </div>
+          <% } %>
+          
+          <ul class='item-list'>
+           
+              <% subcategory_list.forEach(item => { %>
+                <% if (item.number_in_stock <= item.low_limit) { %>
+                <li class='low-limit-item'>
+                  <a href='<%= item.url %>'>
+                    <p><%= item.name %><strong><em><%= item.brand %></em></strong></p>
+                    <p><strong><%= item.number_in_stock %></strong></p>
+                  </a>
+                </li>
+                    <% } else { %>
+                      <li>
+                        <a href='<%= item.url %>'>
+                          <p><%= item.name %><strong><em><%= item.brand %></em></strong></p>
+                          <p><strong><%= item.number_in_stock %></strong></p>
+                        </a>
+                      </li>
+                  <% } %>
+              <% }) %>
+          </ul>
+          <% } %>
+
+          <hr>
+
+          <p>Do you really want to delete  <strong><%= category.name %></strong>?</p>
+
+          <form method='post'>
+            <div class='delete-button-div'>
+              <button type='submit' class='delete-button' 
+                <%= subcategory_list.length > 0 ? 'disabled' : '' %>>
+                Delete
+              </button>
+              <a href='<%= category.url %>'><button type='button'>Cancel</button></a>
+            </div>
+          </form>
+        </section>
+        
+        <%- include('./partials/footer') %>

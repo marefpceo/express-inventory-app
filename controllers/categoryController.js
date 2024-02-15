@@ -157,11 +157,39 @@ exports.category_update_post = [
 
 // Display Category delete form on GET
 exports.cateogry_delete_get = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Category delete GET');
+  const [ category, subcategory_list, category_items ] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
+    Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
+  ]);
+
+  res.render('category_delete', {
+    title: `Delete Category: ${category.name}`,
+    category: category,
+    subcategory_list: subcategory_list,
+    category_items: category_items,
+  });
 });
 
 
 // Handle Category delete on POST
 exports.category_delete_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Category delete POST');
+  const [ category, subcategory_list, category_items ] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
+    Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
+  ]);
+
+  if((subcategory_list.length > 0) || (category_items.length > 0)) {
+    res.render('category_delete', {
+      title: `Delete Category: ${category.name}`,
+      category: category,
+      subcategory_list: subcategory_list,
+      category_items: category_items,
+    });
+    return;
+  } else {
+    await Category.findByIdAndDelete(req.params.id).exec();
+    res.redirect('/inventory/categories');
+  }
 });

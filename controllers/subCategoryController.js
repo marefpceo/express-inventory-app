@@ -176,8 +176,7 @@ exports.sub_category_delete_post = asyncHandler(async (req, res, next) => {
     });
     return;
   } else {
-    await SubCategory.findByIdAndDelete(req.params.id).exec(),
+    await SubCategory.findByIdAndDelete(req.params.id).exec();
     res.redirect('/inventory/subcategories');
   }
-
 });

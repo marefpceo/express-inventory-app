@@ -72,8 +72,10 @@
                                    <% if (subcategory.category._id.toString() === category._id.toString()) { %>
                                     <% if (item.sub_category._id.toString() === subcategory._id.toString()) { %>
                                       <option value='<%= subcategory._id %>' selected><%= subcategory.name %></option>
+                                      <% } else { %>
+                                        <option value='<%= subcategory._id %>'><%= subcategory.name %></option>
                                     <% } %>
-                                    <option value='<%= subcategory._id %>'><%= subcategory.name %></option>
+                                    
                                    <% } %>
                                   <% }) %>
                                 </optgroup>
