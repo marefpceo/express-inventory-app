@@ -144,11 +144,40 @@ body('categorySelect')
 
 // Display Category delete form on GET
 exports.sub_cateogry_delete_get = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Sub Category delete GET');
+  const [ subcategory, subcategory_items ] = await Promise.all([
+    await SubCategory.findById(req.params.id).exec(),
+    Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
+  ]);
+
+  if (subcategory === null) {
+    res.redirect('/inventory/subcateogries');
+  }
+
+  res.render('sub_category_delete', {
+    title: `Delete ${subcategory.name}`,
+    subcategory: subcategory,
+    subcategory_items: subcategory_items,
+  });
 });
 
 
 // Handle Category delete on POST
 exports.sub_category_delete_post = asyncHandler(async (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Sub Category delete POST');
+  const [ subcategory, subcategory_items ] = await Promise.all([
+    await SubCategory.findById(req.params.id).exec(),
+    Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
+  ]);
+
+  if(subcategory_items.length > 0) {
+    res.render('sub_category_delete', {
+      title: `Delete ${subcategory.name}`,
+      subcategory: subcategory,
+      subcategory_items: subcategory_items,
+    });
+    return;
+  } else {
+    await SubCategory.findByIdAndDelete(req.params.id).exec(),
+    res.redirect('/inventory/subcategories');
+  }
+
 });
