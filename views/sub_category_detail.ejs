@@ -11,13 +11,13 @@
               <h2><%= title %></h2>
               <p><strong>Category: </strong><%= subcategory.category.name %></p>
             </div>
-            <div>
-              <button type='button'>
-                <a href='<%= subcategory.url %>/update'>Update Subcategory</a>
-              </button>
-              <button type='button'>
-                <a href='<%= subcategory.url %>/delete'>Delete Subcategory</a>
-              </button>
+            <div class='subcat-button-div'>
+              <a href='<%= subcategory.url %>/update'>
+                <button type='button'>Update</button>
+              </a>
+              <a href='<%= subcategory.url %>/delete'>
+                <button type='button'>Delete</button>
+              </a>
             </div>
           </div>
           <hr>

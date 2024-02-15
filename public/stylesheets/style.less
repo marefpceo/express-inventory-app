@@ -6,7 +6,8 @@
 @background-mid:    #e8e8e8;
 @text-primary:      #495464;
 @text-secondary:    #bbbfca;
-@danger: #ff000065;
+@danger: #ff0000AA;
+@danger-light: #ff000065;
 
 
 * {
@@ -73,6 +74,19 @@ fieldset {
   grid-template-columns: 60% 40%;
 }
 
+.item-button-div {
+  display: flex;
+  button {
+    color: @text-primary;
+    font-size: 10pt;
+  }
+}
+
+.subcat-button-div,
+.category-button-div {
+  .item-button-div();
+}
+
 .delete-button-div button {
   color: @text-primary;
   font-size: 11pt;
@@ -80,7 +94,7 @@ fieldset {
 
 .delete-button {
   border-color: @danger;
-  background-color: @danger;
+  background-color: @danger-light;
 }
 
 button {
@@ -232,7 +246,7 @@ section {
 
 .low-limit-button {
   .low-limit-item();
-  background-color: @danger;
+  background-color: @danger-light;
   margin: 0 20px;
   padding: 0 10px;
   

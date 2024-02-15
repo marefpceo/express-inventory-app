@@ -13,13 +13,13 @@
                <p>Low Stock. Order Soon</p>
              </div>
             <% } %>
-            <div>
-              <button type='button'>
-                <a href='<%= item.url %>/update'>Update Item</a>
-              </button>
-              <button type='button'>
-                <a href='<%= item.url %>/delete'>Delete Item</a>
-              </button>
+            <div class='item-button-div'>
+                <a href='<%= item.url %>/update'>
+                  <button type='button'>Update</button>
+                </a>
+              <a href='<%= item.url %>/delete'>
+                <button type='button'>Delete</button>
+              </a>
             </div>
 
           </div>
