@@ -91,6 +91,8 @@ exports.item_create_post = [
     .isLength({ min: 3 })
     .withMessage('Description must contain a minimum of 3 characters')
     .escape(),
+  body('item_image')
+    .isBase64(),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -108,6 +110,7 @@ exports.item_create_post = [
         category: await Category.findById(
           (await SubCategory.findById(req.body.categorySelect).exec()).category
           ),
+        item_image: req.file,
       }),
     ]);
 

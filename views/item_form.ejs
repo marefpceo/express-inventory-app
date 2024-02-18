@@ -9,7 +9,7 @@
             <h2><%= title %></h2>
             <hr>
             
-           <form method='post'>
+           <form method='post' enctype='multipart/form-data'>
             <div class='form-section-double'>
               <div>
                 <div class='form-input'>
@@ -83,6 +83,8 @@
                       </select>
                   </div>
 
+                  <label for='item_image'>Upload Item Image: </label>
+                  <input type='file' name='item_image' id='item_image' accept='image/*'>
               </div>
             </div>
 

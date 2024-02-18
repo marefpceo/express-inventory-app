@@ -10,6 +10,7 @@ const ItemSchema = new Schema({
   low_limit: { type: Number, required: true },
   category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   sub_category: { type: Schema.Types.ObjectId, ref: 'SubCategory', required: true },
+  item_image: { data: Buffer },
 });
 
 ItemSchema.virtual('url').get(function () {

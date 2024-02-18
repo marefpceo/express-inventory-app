@@ -57,7 +57,7 @@ async function subCategoryCreate(index, name, category) {
 }
 
 async function itemCreate(index, name, brand, description, price, number_in_stock, low_limit,
-  category, sub_category){
+  category, sub_category, item_image){
     const item = new Item({
       name: name,
       brand: brand,
@@ -67,6 +67,7 @@ async function itemCreate(index, name, brand, description, price, number_in_stoc
       low_limit: low_limit,
       category: category,
       sub_category: sub_category,
+      item_image: item_image,
     });
 
     await item.save();
@@ -112,6 +113,7 @@ async function createItems() {
       5,
       categories[0],
       subCategories[0],
+      '',
     ),
     itemCreate(
       1,
@@ -123,6 +125,7 @@ async function createItems() {
       15,
       categories[0],
       subCategories[1],
+      '',
     ),
     itemCreate(
       2,
@@ -134,6 +137,7 @@ async function createItems() {
       10,
       categories[0],
       subCategories[2],
+      '',
     ),
     itemCreate(
       3,
@@ -145,6 +149,7 @@ async function createItems() {
       5,
       categories[0],
       subCategories[0],
+      '',
     ),
     itemCreate(
       4,
@@ -155,18 +160,20 @@ async function createItems() {
       2,
       3,
       categories[1],
-      subCategories[4]
+      subCategories[4],
+      '',
     ),
     itemCreate(
       5,
       'Whole Milk',
       'Horizon',
-      'qt',
+      'quart',
       2.99,
       10,
       28,
       categories[1],
       subCategories[3],
+      '',
     ),
     itemCreate(
       6,
@@ -178,6 +185,7 @@ async function createItems() {
       3,
       categories[1],
       subCategories[3],
+      '',
     ),
     itemCreate(
       7,
@@ -189,6 +197,7 @@ async function createItems() {
       50,
       categories[1],
       subCategories[5],
+      '',
     ),
     itemCreate(
       8,
@@ -200,6 +209,7 @@ async function createItems() {
       70,
       categories[1],
       subCategories[5],
+      '',
     ),
     itemCreate(
       9,
@@ -211,6 +221,7 @@ async function createItems() {
       15,
       categories[2],
       subCategories[6],
+      '',
     ),
     itemCreate(
       10,
@@ -222,6 +233,7 @@ async function createItems() {
       5,
       categories[2],
       subCategories[7],
+      '',
     ),
     itemCreate(
       11,
@@ -233,6 +245,7 @@ async function createItems() {
       10,
       categories[2],
       subCategories[8],
+      '',
     ),
   ]);
 }

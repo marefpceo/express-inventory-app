@@ -1,5 +1,7 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
+const upload = multer();
 
 // Require controller modules
 const category_controller = require('../controllers/categoryController');
@@ -69,13 +71,13 @@ router.get('/subcategories', sub_category_controller.sub_category_list);
 router.get('/item/create', item_controller.item_create_get);
 
 // POST request for creating an Item
-router.post('/item/create', item_controller.item_create_post);
+router.post('/item/create', upload.single('item_image'), item_controller.item_create_post);
 
 // GET request to update an Item
 router.get('/item/:id/update', item_controller.item_update_get);
 
 // Post request to update an Item
-router.post('/item/:id/update', item_controller.item_update_post);
+router.post('/item/:id/update', upload.single('item_image'), item_controller.item_update_post);
 
 // GET request to delete an Item
 router.get('/item/:id/delete', item_controller.item_delete_get);
