@@ -40,7 +40,9 @@
               <p><strong>Subcategory:</strong>&nbsp;<%= item.sub_category.name %></p>
             </div>
             <div class='item-image'>
-              <img src='/images/Placeholder-view.png' alt='Image placeholder'>
+              <img 
+                src='<%= stored_item_image %>' 
+                alt='<%= item.item_image === '' ? 'Placeholder image' : `${item.name} image` %>'>
             </div>
           </div>
         </section>

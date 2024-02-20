@@ -40,6 +40,7 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
   res.render('item_detail', {
     title: 'Detail Page',
     item: item,
+    stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
   });
 });
 
@@ -110,7 +111,7 @@ exports.item_create_post = [
         category: await Category.findById(
           (await SubCategory.findById(req.body.categorySelect).exec()).category
           ),
-        item_image: req.file,
+        item_image: typeof req.file === 'undefined' ? '' : req.file.filename,
       }),
     ]);
 

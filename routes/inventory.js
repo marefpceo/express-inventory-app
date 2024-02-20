@@ -1,7 +1,23 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const upload = multer();
+
+const storage = multer.diskStorage({ 
+  // Define the destination to save the image file
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+
+  // Create a new file name with extension and unique identifier. All spaces are also
+  // replaced with and underscore '_'
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const nameSplit = file.originalname.toLowerCase().replace(/ /g, '_').split('.');
+    cb(null, nameSplit[0] + '-' + uniqueSuffix + '.' + nameSplit[1]);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Require controller modules
 const category_controller = require('../controllers/categoryController');
