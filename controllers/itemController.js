@@ -3,6 +3,8 @@ const Category = require('../models/category');
 const SubCategory = require('../models/subCategory');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
+const { unlinkSync } =require('node:fs');
+const path = require('path');
 
 
 // Displays list of all Items
@@ -116,6 +118,13 @@ exports.item_create_post = [
     ]);
 
     if (!errors.isEmpty()) {
+      try {
+        unlinkSync(`public/uploads/${item.item_image}`);
+      } catch (err) {
+        console.log(err);
+        return next(err);
+      }
+
       res.render('item_form', {
         title: 'Create Item',
         item: item,
@@ -145,6 +154,7 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
     item: item,
     categories: categories,
     sub_categories: subcategories,
+    stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
   });
 });
 
@@ -184,6 +194,7 @@ exports.item_update_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+    const currentItemImage = await Item.findById(req.params.id).exec();
     const [ categories, sub_categories, item ] = await Promise.all([
       Category.find().sort({ name: 1 }).exec(),
       SubCategory.find().sort({ name: 1 }).exec(),
@@ -197,21 +208,36 @@ exports.item_update_post = [
         sub_category: await SubCategory.findById(req.body.categorySelect).exec(),
         category: await Category.findById(
           (await SubCategory.findById(req.body.categorySelect).exec()).category),
+        item_image: typeof req.file === 'undefined' ? currentItemImage.item_image : req.file.filename,
         _id: req.params.id,
       })
     ]);
     
+    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
+    ////////// Needs to delete old file if new one is used.
     if(!errors.isEmpty()) {
+        try {
+          unlinkSync(`public/uploads/${item.item_image}`);
+        } catch (err) {
+          console.log(err);
+          return next(err);
+        }
+
       res.render('item_update', {
         title: 'Update Item',
         item: item,
         categories: categories,
         sub_categories: sub_categories,
+        stored_item_image: item.item_image === '' ? `/uploads/${currentItemImage.item_image}` : `/uploads/${item.item_image}`,
         errors: errors.array(),
       });
       return;
     } else {
       const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {}).exec();
+
+      
+
       res.redirect(updatedItem.url);
     }
   })
@@ -233,12 +259,22 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
     item: item,
     item_category: await Category.findById(item.category).exec(),
     item_subcategory: await SubCategory.findById(item.sub_category).exec(),
+    stored_item_image: `/uploads/${item.item_image}`,
   });
 });
 
 
 // Handle Item delete on POST
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
+  const currentItem = await Item.findById(req.params.id).exec();
   await Item.findByIdAndDelete(req.params.id).exec();
+  
+  try {
+    unlinkSync(`public/uploads/${currentItem.item_image}`);
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+
   res.redirect('/inventory/items');
 });
