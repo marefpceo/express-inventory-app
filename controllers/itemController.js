@@ -94,8 +94,7 @@ exports.item_create_post = [
     .isLength({ min: 3 })
     .withMessage('Description must contain a minimum of 3 characters')
     .escape(),
-  body('item_image')
-    .isBase64(),
+
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -118,13 +117,6 @@ exports.item_create_post = [
     ]);
 
     if (!errors.isEmpty()) {
-      try {
-        unlinkSync(`public/uploads/${item.item_image}`);
-      } catch (err) {
-        console.log(err);
-        return next(err);
-      }
-
       res.render('item_form', {
         title: 'Create Item',
         item: item,
@@ -132,6 +124,14 @@ exports.item_create_post = [
         sub_categories: allSubCategories,
         errors: errors.array(),
       });
+
+        try {
+          unlinkSync(`public/uploads/${item.item_image}`);
+        } catch (err) {
+          console.log(err);
+          return next(err);
+        }
+        
       return;
     } else {
       await item.save();
@@ -213,33 +213,30 @@ exports.item_update_post = [
       })
     ]);
     
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-    ////////// Needs to delete old file if new one is used.
+    
     if(!errors.isEmpty()) {
-        try {
-          unlinkSync(`public/uploads/${item.item_image}`);
-        } catch (err) {
-          console.log(err);
-          return next(err);
-        }
-
       res.render('item_update', {
         title: 'Update Item',
         item: item,
         categories: categories,
         sub_categories: sub_categories,
-        stored_item_image: item.item_image === '' ? `/uploads/${currentItemImage.item_image}` : `/uploads/${item.item_image}`,
+        stored_item_image: item.item_image,
         errors: errors.array(),
       });
       return;
     } else {
-      const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {}).exec();
+        if(currentItemImage.item_image !== item.item_image) {
+          try {
+            unlinkSync(`public/uploads/${currentItemImage.item_image}`);
+          } catch (err) {
+            console.log(err);
+            return next(err);
+          }
+        }
 
-      
-
-      res.redirect(updatedItem.url);
-    }
+        const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {}).exec();
+        res.redirect(updatedItem.url);
+      }
   })
 ];
 
@@ -259,7 +256,7 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
     item: item,
     item_category: await Category.findById(item.category).exec(),
     item_subcategory: await SubCategory.findById(item.sub_category).exec(),
-    stored_item_image: `/uploads/${item.item_image}`,
+    stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
   });
 });
 
@@ -269,11 +266,13 @@ exports.item_delete_post = asyncHandler(async (req, res, next) => {
   const currentItem = await Item.findById(req.params.id).exec();
   await Item.findByIdAndDelete(req.params.id).exec();
   
-  try {
-    unlinkSync(`public/uploads/${currentItem.item_image}`);
-  } catch (err) {
-    console.log(err);
-    return next(err);
+  if(currentItem.item_image !== '') {
+    try {
+      unlinkSync(`public/uploads/${currentItem.item_image}`);
+    } catch (err) {
+      console.log(err);
+      return next(err);
+    }
   }
 
   res.redirect('/inventory/items');
