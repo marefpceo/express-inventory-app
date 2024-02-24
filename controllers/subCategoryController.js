@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const SubCategory = require('../models/subCategory');
 const Category = require('../models/category');
 const Item = require('../models/item');
@@ -162,21 +164,38 @@ exports.sub_cateogry_delete_get = asyncHandler(async (req, res, next) => {
 
 
 // Handle Category delete on POST
-exports.sub_category_delete_post = asyncHandler(async (req, res, next) => {
-  const [ subcategory, subcategory_items ] = await Promise.all([
-    await SubCategory.findById(req.params.id).exec(),
-    Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
-  ]);
+exports.sub_category_delete_post = [
+  body('password')
+    .trim()
+    .matches(process.env.ADMIN_PASSWORD)
+    .withMessage('Password Incorrect')
+    .escape(),
 
-  if(subcategory_items.length > 0) {
-    res.render('sub_category_delete', {
-      title: `Delete ${subcategory.name}`,
-      subcategory: subcategory,
-      subcategory_items: subcategory_items,
-    });
-    return;
-  } else {
-    await SubCategory.findByIdAndDelete(req.params.id).exec();
-    res.redirect('/inventory/subcategories');
-  }
-});
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const [ subcategory, subcategory_items ] = await Promise.all([
+      await SubCategory.findById(req.params.id).exec(),
+      Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
+    ]);
+
+    if(subcategory_items.length > 0) {
+      res.render('sub_category_delete', {
+        title: `Delete ${subcategory.name}`,
+        subcategory: subcategory,
+        subcategory_items: subcategory_items,
+      });
+      return;
+    } else if(!errors.isEmpty()) {
+        res.render('sub_category_delete', {
+          title: `Delete ${subcategory.name}`,
+          subcategory: subcategory,
+          subcategory_items: subcategory_items,
+          password: req.body.password,
+          errors: errors.array(),
+        });
+      } else {
+          await SubCategory.findByIdAndDelete(req.params.id).exec();
+          res.redirect('/inventory/subcategories');
+      }
+  })
+];
