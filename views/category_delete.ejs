@@ -76,6 +76,10 @@
           <p>Do you really want to delete  <strong><%= category.name %></strong>?</p>
 
           <form method='post'>
+            <label for='password'>If so, enter Admin Password, then press Delete</label>
+            <input type='password' name='password' id='password' 
+            value='<%= typeof password === 'undefined' ? '' : password %>'>
+            
             <div class='delete-button-div'>
               <button type='submit' class='delete-button' 
                 <%= subcategory_list.length > 0 ? 'disabled' : '' %>>

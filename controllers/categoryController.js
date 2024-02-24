@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const Category = require('../models/category');
 const SubCategory = require('../models/subCategory');
 const Item = require('../models/item');
@@ -173,23 +175,41 @@ exports.cateogry_delete_get = asyncHandler(async (req, res, next) => {
 
 
 // Handle Category delete on POST
-exports.category_delete_post = asyncHandler(async (req, res, next) => {
-  const [ category, subcategory_list, category_items ] = await Promise.all([
-    Category.findById(req.params.id).exec(),
-    SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
-    Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
-  ]);
+exports.category_delete_post = [
+  body('password')
+    .trim()
+    .matches(process.env.ADMIN_PASSWORD)
+    .withMessage('Passord Incorrect')
+    .escape(),
 
-  if((subcategory_list.length > 0) || (category_items.length > 0)) {
-    res.render('category_delete', {
-      title: `Delete Category: ${category.name}`,
-      category: category,
-      subcategory_list: subcategory_list,
-      category_items: category_items,
-    });
-    return;
-  } else {
-    await Category.findByIdAndDelete(req.params.id).exec();
-    res.redirect('/inventory/categories');
-  }
-});
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const [ category, subcategory_list, category_items ] = await Promise.all([
+      Category.findById(req.params.id).exec(),
+      SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
+      Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
+    ]);
+
+    if((subcategory_list.length > 0) || (category_items.length > 0)) {
+      res.render('category_delete', {
+        title: `Delete Category: ${category.name}`,
+        category: category,
+        subcategory_list: subcategory_list,
+        category_items: category_items,
+      });
+      return;
+    } else if(!errors.isEmpty()) {
+      res.render('category_delete', {
+        title: `Delete Category: ${category.name}`,
+        category: category,
+        subcategory_list: subcategory_list,
+        category_items: category_items,
+        password: req.body.password,
+        errors: errors.array(),
+      });
+    } else {
+        await Category.findByIdAndDelete(req.params.id).exec();
+        res.redirect('/inventory/categories');
+      }
+    })
+];
