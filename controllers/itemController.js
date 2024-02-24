@@ -1,10 +1,11 @@
+require('dotenv').config();
+
 const Item = require('../models/item');
 const Category = require('../models/category');
 const SubCategory = require('../models/subCategory');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const { unlinkSync } =require('node:fs');
-const path = require('path');
 
 
 // Displays list of all Items
@@ -213,7 +214,7 @@ exports.item_update_post = [
       })
     ]);
     
-    
+
     if(!errors.isEmpty()) {
       res.render('item_update', {
         title: 'Update Item',
@@ -262,18 +263,39 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
 
 
 // Handle Item delete on POST
-exports.item_delete_post = asyncHandler(async (req, res, next) => {
-  const currentItem = await Item.findById(req.params.id).exec();
-  await Item.findByIdAndDelete(req.params.id).exec();
-  
-  if(currentItem.item_image !== '') {
-    try {
-      unlinkSync(`public/uploads/${currentItem.item_image}`);
-    } catch (err) {
-      console.log(err);
-      return next(err);
-    }
-  }
+exports.item_delete_post = [
+  body('password')
+    .trim()
+    .matches(process.env.ADMIN_PASSWORD)
+    .withMessage('Password incorrect')
+    .escape(),
 
-  res.redirect('/inventory/items');
-});
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const item = await Item.findById(req.params.id).exec();
+
+    if (!errors.isEmpty()){
+      res.render('item_delete', {
+        title: 'Delete Item',
+        item: item,
+        item_category: await Category.findById(item.category).exec(),
+        item_subcategory: await SubCategory.findById(item.sub_category).exec(),
+        stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
+        password: req.body.password,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+        await Item.findByIdAndDelete(req.params.id).exec();
+        if(item.item_image !== '') {
+          try {
+            unlinkSync(`public/uploads/${item.item_image}`);
+          } catch (err) {
+            console.log(err);
+            return next(err);
+          }
+        }
+        res.redirect('/inventory/items');
+      }
+    })
+];

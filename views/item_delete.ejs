@@ -44,6 +44,10 @@
           <p>Do you really want to delete  <strong><%= item.name %></strong>?</p>
           
           <form method='post'>
+            <label for='password'>If so, enter Admin Password, then press Delete</label>
+            <input type='password' name='password' id='password' 
+            value='<%= typeof password === 'undefined' ? '' : password %>'>
+
             <div class='delete-button-div'>
               <button type='submit' class='delete-button'>Delete</button>
               <a href='<%= item.url %>'><button type='button'>Cancel</button></a>
