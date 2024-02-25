@@ -267,7 +267,7 @@ exports.item_delete_post = [
   body('password')
     .trim()
     .matches(process.env.ADMIN_PASSWORD)
-    .withMessage('Password incorrect')
+    .withMessage('Password Incorrect')
     .escape(),
 
   asyncHandler(async (req, res, next) => {

@@ -44,6 +44,23 @@ form {
   flex-direction: column;
 }
 
+.delete-form {
+  div {
+    margin-top: 5%;
+  }
+
+  .password-input {
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+
+    p {
+      margin-left: 5px;
+      color: @danger;
+    }
+  }
+}
+
 fieldset {
   width: 60%;
   padding: 10px;
@@ -85,6 +102,12 @@ fieldset {
 .subcat-button-div,
 .category-button-div {
   .item-button-div();
+}
+
+.admin-password-div {
+  label {
+    font-size: 11pt;
+  }
 }
 
 .delete-button-div button {

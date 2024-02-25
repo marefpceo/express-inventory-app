@@ -179,7 +179,7 @@ exports.category_delete_post = [
   body('password')
     .trim()
     .matches(process.env.ADMIN_PASSWORD)
-    .withMessage('Passord Incorrect')
+    .withMessage('Password Incorrect')
     .escape(),
 
   asyncHandler(async (req, res, next) => {
