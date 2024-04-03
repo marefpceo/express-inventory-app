@@ -11,7 +11,7 @@ Express Inventory App is from the The Odin Project course's NodeJS Module, Proje
 * Images can be added and uploaded to Items (Optional)
 
 ### Installation Guide
-[Click here for live demo](https://www.google.com)
+[Click here for live demo](https://highfalutin-cat-avenue.glitch.me)
 
 #### Local Install
 * Clone this repository [here](https://github.com/marefpceo/express-inventory-app)
