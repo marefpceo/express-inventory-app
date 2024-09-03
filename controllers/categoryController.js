@@ -37,8 +37,6 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 exports.category_detail = asyncHandler(async (req, res, next) => {
   const categoryList = await db.getCategoryList(req.params.id);
 
-  console.log(categoryList);
-
   if (categoryList === null) {
     const err = new Error('Category not found!');
     err.status = 404;
