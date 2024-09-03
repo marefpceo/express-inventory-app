@@ -6,6 +6,7 @@ const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { DateTime } = require('luxon');
 const { body, validationResult } = require('express-validator');
+const db = require('../db/queries');
 
 
 exports.index = asyncHandler(async (req, res, next) => {
@@ -20,9 +21,14 @@ exports.index = asyncHandler(async (req, res, next) => {
 
   const currentDate = DateTime.now().toLocaleString(DateTime.DATETIME_FULL);
 
+  const categoryNames = await db.getCategoryNames();
+  const totalItems = await db.getTotalItems();
+
+  console.log(categoryNames);
+  console.log(totalItems);
   res.render('index', {
     title: 'Grocery Inventory App',
-    categories: allCategories,
+    categories: categoryNames,
     items: allItems,
     current_date_time: currentDate,
   });

@@ -16,9 +16,9 @@
                 <% var itemCount = 0 %>
                 <% var unitTotal = 0 %>
                     <div class='snapshot-card'>
-                        <h3><%= category.name %></h3>
+                        <h3><%= category.category_name %></h3>
                         <% items.forEach(item => { %>
-                            <% if (category.name === item.category.name) { %>
+                            <% if (category.category_name === item.category.category_name) { %>
                               <% itemCount++ %>
                               <% unitTotal = unitTotal + item.number_in_stock %>
                             <% } %>

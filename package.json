@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=express-inventory-app:* npm run devstart"
+    "serverstart": "DEBUG=express-inventory-app:* npm run devstart",
+    "populatedb": "node db/populatedb.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
