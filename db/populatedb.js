@@ -17,7 +17,7 @@ VALUES
 `;
 
 const SUBCATEGORIES = `
-CREATE TABLE IF NOT EXISTS subcategories(
+CREATE TABLE IF NOT EXISTS subcategories (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   subcategory_name VARCHAR ( 255 ),
   category_id INT,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS items (
   subcategory_id INT, 
   item_image_url TEXT,
   FOREIGN KEY (category_id) REFERENCES category(id),
-  FOREGIN KEY (subcategory_id) REFERENCES subcategory(id)
+  FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
 );
 
 INSERT INTO items (name, brand, description, price, number_in_stock, low_limit, category_id, subcategory_id)
@@ -72,7 +72,7 @@ VALUES
 async function main() {
   console.log("seeding...");
   const client = new Client({
-    connectionString: process.env.POSTGRESQL_URI_REMOTE,
+    connectionString: process.env.POSTGRESQL_URI,
   });
   await client.connect();
   await client.query(CATEGORY);
