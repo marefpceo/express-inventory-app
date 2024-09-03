@@ -1,7 +1,9 @@
-# Express Inventory App
+# Express Inventory App v2.0
+### Changes and Updates
+- Major change is moving to PostgreSQL from MongoDB
 
 ### Introduction
-Express Inventory App is an inventory management web application designed for a ficticous grocery store. The app makes use of CRUD methods for managing, maintaining and updating the store's inventory. The app aims to give users a quick and efficient way view and manage inventories, by organizing items by categories and subcategories. 
+Express Inventory App is an inventory management web application designed for a ficticous grocery store. The app makes use of CRUD methods for managing, maintaining and updating the store's inventory. The app aims to give users a quick and efficient way view and manage inventories, organizing items by categories and subcategories. 
 
 Express Inventory App is from the The Odin Project course's NodeJS Module, Project: Inventory Application. 
 
