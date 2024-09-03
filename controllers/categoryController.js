@@ -24,8 +24,10 @@ exports.index = asyncHandler(async (req, res, next) => {
 
 // Displays list of all Categories
 exports.category_list = asyncHandler(async (req, res, next) => {
-  const allCategories = await Category.find().sort({ name: 1 }).exec();
+  // const allCategories = await Category.find().sort({ name: 1 }).exec();
+  const allCategories = await db.getCategoryNames();
 
+  console.log(allCategories);
   res.render('category_list', {
     title: 'Category List',
     category_list: allCategories,
@@ -35,21 +37,19 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Category
 exports.category_detail = asyncHandler(async (req, res, next) => {
-  const [category, itemsInCategory] = await Promise.all([
-    Category.findById(req.params.id).exec(),
-    Item.find({ category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
-  ]); 
+  const categoryList = await db.getCategoryList(req.params.id);
 
-  if (category === null) {
+  console.log(categoryList);
+
+  if (categoryList === null) {
     const err = new Error('Category not found!');
     err.status = 404;
     return next(err);
   }
 
   res.render('category_detail', {
-    title: `${category.name} Items`,
-    category: category,
-    category_items: itemsInCategory,
+    title: `${req.params.id} Items`,
+    category: categoryList,
   });
 });
 

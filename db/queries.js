@@ -18,7 +18,17 @@ async function getCategoryNames() {
   return rows;
 }
 
+// Returns list of items for a specific category name
+async function getCategoryList(category) {
+  const { rows } = await pool.query(`
+    SELECT * FROM items, category
+    WHERE (items.category_id = category.id) AND (category.category_name = $1)
+    `, [category]);
+  return rows;
+}
+
 module.exports = {
   getInventoryOverview,
-  getCategoryNames
+  getCategoryNames,
+  getCategoryList,
 }
