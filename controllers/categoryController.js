@@ -9,27 +9,14 @@ const { body, validationResult } = require('express-validator');
 const db = require('../db/queries');
 
 
+// Displays index page with inventory overview stats
 exports.index = asyncHandler(async (req, res, next) => {
-  // Get list of Categories, number of total items, and number of items per category
-  const [
-    allCategories,
-    allItems,
-  ] = await Promise.all([
-    Category.find().sort({ name: 1 }).exec(),
-    Item.find().populate('category').exec(),
-  ]);
-
   const currentDate = DateTime.now().toLocaleString(DateTime.DATETIME_FULL);
+  const inventoryOverview = await db.getInventoryOverview();
 
-  const categoryNames = await db.getCategoryNames();
-  const totalItems = await db.getTotalItems();
-
-  console.log(categoryNames);
-  console.log(totalItems);
   res.render('index', {
     title: 'Grocery Inventory App',
-    categories: categoryNames,
-    items: allItems,
+    categories: inventoryOverview,
     current_date_time: currentDate,
   });
 });

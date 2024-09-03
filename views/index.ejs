@@ -13,22 +13,13 @@
 
             <div class='cards'>
                 <% categories.forEach(category => { %>
-                <% var itemCount = 0 %>
-                <% var unitTotal = 0 %>
                     <div class='snapshot-card'>
                         <h3><%= category.category_name %></h3>
-                        <% items.forEach(item => { %>
-                            <% if (category.category_name === item.category.category_name) { %>
-                              <% itemCount++ %>
-                              <% unitTotal = unitTotal + item.number_in_stock %>
-                            <% } %>
-                        <% }) %>
-                        <p class='item-count'>Total Items: <strong><%= itemCount %></strong></p>
-                        <p class='item-count'>Total Units: <strong><%= unitTotal %></strong></p>
+                        <p class='item-count'>Total Items: <strong><%= category.total_items %></strong></p>
+                        <p class='item-count'>Total Units: <strong><%= category.total_units %></strong></p>
                     </div>
                 <% }) %>
             </div>
-        
         </section>
         
 <%- include('./partials/footer') %>
