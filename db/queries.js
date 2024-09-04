@@ -1,5 +1,6 @@
 const pool = require('./pool');
 
+
 // Returns inventory overview for index page
 async function getInventoryOverview() {
   const { rows } = await pool.query(`
@@ -11,6 +12,9 @@ async function getInventoryOverview() {
     ORDER BY category.id ASC`);
   return rows;
 }
+
+
+/////////////// Category Controller Queries ///////////////
 
 // Returns all category names
 async function getCategoryNames() {
@@ -27,8 +31,39 @@ async function getCategoryList(category) {
   return rows;
 }
 
+/////////////// Subcategory Controller Queries ///////////////
+
+// Returns all subcategory names
+async function getSubcategoryNames() {
+  const { rows }= await pool.query('SELECT id, subcategory_name FROM subcategories');
+  return rows;
+}
+
+// Return selected subcategory name
+async function getSubcategory(subcategoryId) {
+  const { rows } = await pool.query(`
+    SELECT * FROM subcategories 
+    WHERE (subcategories.id = $1)
+    `, [subcategoryId]);
+  return rows;
+}
+
+// Returns list of items for a specific subcategory name
+async function getSubcategoryList(subcategory) {
+  const { rows } = await pool.query(`
+    SELECT * FROM items, subcategories
+    WHERE (items.subcategory_id = $1) 
+      AND (subcategories.id = items.subcategory_id)
+    `, [subcategory]);
+  return rows;
+}
+
+
 module.exports = {
   getInventoryOverview,
   getCategoryNames,
   getCategoryList,
+  getSubcategoryNames,
+  getSubcategory,
+  getSubcategoryList,
 }

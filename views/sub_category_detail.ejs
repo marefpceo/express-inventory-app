@@ -8,8 +8,8 @@
         <section>
           <div class='section-header'>
             <div>
-              <h2><%= title %></h2>
-              <p><strong>Category: </strong><%= subcategory.category.name %></p>
+              <h2><%= title.subcategory_name %></h2>
+              <p><strong>Category: </strong><%= subcategory.subcategory_name %></p>
             </div>
             <div class='subcat-button-div'>
               <a href='<%= subcategory.url %>/update'>
@@ -22,7 +22,7 @@
           </div>
           <hr>
           
-          <% if (subcategory_items.length > 0) { %>
+          <% if (subcategory.length > 0) { %>
           <span><em>*Low stock items highlighed in red</em></span>
           <div class='list-header'>
             <p>Item Name</p>
@@ -30,7 +30,7 @@
           </div>
 
           <ul class='item-list'>
-              <% subcategory_items.forEach(item => { %>
+              <% subcategory.forEach(item => { %>
                 <% if (item.number_in_stock <= item.low_limit) { %>
                 <li class='low-limit-item'>
                   <a href='<%= item.url %>'>

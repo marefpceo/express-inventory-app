@@ -13,8 +13,8 @@
               <% if (subcategory_list) { %>
                 <% subcategory_list.forEach(subcategory => { %>
                   <div class='subcategory-card'>
-                      <a href='<%= subcategory.url %>'>
-                          <h3><%= subcategory.name %></h3>
+                      <a href='/inventory/subcategory/<%= subcategory.id %>'>
+                          <h3><%= subcategory.subcategory_name %></h3>
                       </a>
                   </div>
               <% }) %>

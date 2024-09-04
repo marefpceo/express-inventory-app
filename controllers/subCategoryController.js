@@ -5,11 +5,11 @@ const Category = require('../models/category');
 const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
+const db = require('../db/queries');
 
 // Displays list of all Categories
 exports.sub_category_list = asyncHandler(async (req, res, next) => {
-  const allSubcategories = await SubCategory.find().sort({ name: 1 }).exec();
-  
+  const allSubcategories = await db.getSubcategoryNames();
   res.render('sub_category_list', {
     title: 'Subcategory List',
     subcategory_list: allSubcategories,
@@ -19,11 +19,9 @@ exports.sub_category_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Category
 exports.sub_category_detail = asyncHandler(async (req, res, next) => {
-  const [ subcategory, itemsInSubcategory ] = await Promise.all([
-    SubCategory.findById(req.params.id).populate('category').exec(),
-    Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
-  ]);
+  const subcategory = await db.getSubcategoryList(req.params.id);
 
+  console.log(subcategory);
   if (subcategory === null) {
     const err = new Error('Subcategory not found!');
     err.status = 404;
@@ -31,9 +29,8 @@ exports.sub_category_detail = asyncHandler(async (req, res, next) => {
   }
 
   res.render('sub_category_detail', {
-    title: `${subcategory.name} List`,
-    subcategory: subcategory,
-    subcategory_items: itemsInSubcategory,
+    title: `${subcategory.subcategory_name} List`,
+    subcategory: subcategory
   });
 });
 
