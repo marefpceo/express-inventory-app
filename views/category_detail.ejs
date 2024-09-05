@@ -35,14 +35,14 @@
               <% category.forEach(item => { %>
                 <% if (item.number_in_stock <= item.low_limit) { %>
                 <li class='low-limit-item'>
-                  <a href='<%= item.url %>'>
+                  <a href='/inventory/item/<%= item.id %>'>
                     <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p>
                     <p><strong><%= item.number_in_stock %></strong></p>
                   </a>
                 </li>
                     <% } else { %>
                       <li>
-                        <a href='<%= item.url %>'>
+                        <a href='/inventory/item/<%= item.id %>'>
                           <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p>
                           <p><strong><%= item.number_in_stock %></strong></p>
                         </a>
