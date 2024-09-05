@@ -59,12 +59,24 @@ async function getSubcategoryList(subcategory) {
 }
 
 /////////////// Item Controller Queries ///////////////
+
+// Returns list of all Items
 async function getItemsList() {
   const { rows } = await pool.query(`
     SELECT id, name, brand, number_in_stock, low_limit FROM items
     ORDER BY name ASC;
     `);
-    return rows;
+  return rows;
+}
+
+// Returns list of all Low Stock Items
+async function getLowStockItems() {
+  const { rows } = await pool.query(`
+    SELECT id, name, brand, number_in_stock, low_limit FROM items
+    WHERE number_in_stock < low_limit
+    ORDER BY name ASC;
+    `);
+  return rows;
 }
 
 
@@ -77,4 +89,5 @@ module.exports = {
   getSubcategory,
   getSubcategoryList,
   getItemsList,
+  getLowStockItems,
 }

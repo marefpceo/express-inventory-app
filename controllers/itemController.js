@@ -11,7 +11,6 @@ const db = require('../db/queries');
 
 // Displays list of all Items
 exports.item_list = asyncHandler(async (req, res, next) => {
-  // const allItems = await Item.find().sort({ name: 1 }).exec();
   const allItems = await db.getItemsList();
 
   res.render('item_list', {
@@ -21,19 +20,21 @@ exports.item_list = asyncHandler(async (req, res, next) => {
 });
 
 
+// Displays list of all low stock items
+exports.item_low_stock = asyncHandler(async (req, res, next) => {
+  const lowStockItems = await db.getLowStockItems();
+
+  res.render('item_low_stock', {
+    title: 'Low Stock Items',
+    low_stock_list: lowStockItems,
+  });
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// Displays list of all low stock items
-exports.item_low_stock = asyncHandler(async (req, res, next) => {
-  const allItems = await Item.find().sort({ name: 1 }).exec();
 
-  res.render('item_low_stock', {
-    title: 'Low Stock Items',
-    low_stock_list: allItems,
-  });
-});
 
 
 
