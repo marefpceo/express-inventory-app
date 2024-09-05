@@ -20,8 +20,8 @@ exports.sub_category_list = asyncHandler(async (req, res, next) => {
 // Display detail page for a specific Category
 exports.sub_category_detail = asyncHandler(async (req, res, next) => {
   const subcategory = await db.getSubcategoryList(req.params.id);
+  const subcategoryName = await db.getSubcategory(req.params.id);
 
-  console.log(subcategory);
   if (subcategory === null) {
     const err = new Error('Subcategory not found!');
     err.status = 404;
@@ -29,10 +29,28 @@ exports.sub_category_detail = asyncHandler(async (req, res, next) => {
   }
 
   res.render('sub_category_detail', {
-    title: `${subcategory.subcategory_name} List`,
+    title: `${subcategoryName[0].subcategory_name} List`,
+    category: subcategoryName[0].category_name,
     subcategory: subcategory
   });
 });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Display Category create form on GET

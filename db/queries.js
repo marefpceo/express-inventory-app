@@ -39,11 +39,11 @@ async function getSubcategoryNames() {
   return rows;
 }
 
-// Return selected subcategory name
+// Return selected subcategory name 
 async function getSubcategory(subcategoryId) {
   const { rows } = await pool.query(`
-    SELECT * FROM subcategories 
-    WHERE (subcategories.id = $1)
+    SELECT subcategories.subcategory_name, category.category_name FROM subcategories, category 
+    WHERE (subcategories.id = $1) AND (category.id = subcategories.category_id)
     `, [subcategoryId]);
   return rows;
 }
