@@ -30,9 +30,30 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
   });
 });
 
+
+// Display detail page for a specific Item
+exports.item_detail = asyncHandler(async (req, res, next) => {
+  const temp = await db.getItem(req.params.id);
+  const item = temp[0];
+  console.log(item);
+
+  if (item === null) {
+    const err = new Error('Item not found!');
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render('item_detail', {
+    title: 'Detail Page',
+    item: item,
+    stored_item_image: item.item_image === undefined ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
+  });
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -47,23 +68,6 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
 
 
 
-
-// Display detail page for a specific Item
-exports.item_detail = asyncHandler(async (req, res, next) => {
-  const item = await Item.findById(req.params.id).populate('category sub_category').exec();
-
-  if (item === null) {
-    const err = new Error('Item not found!');
-    err.status = 404;
-    return next(err);
-  }
-
-  res.render('item_detail', {
-    title: 'Detail Page',
-    item: item,
-    stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
-  });
-});
 
 
 // Display Item create form on GET

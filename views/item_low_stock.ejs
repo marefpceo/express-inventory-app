@@ -22,7 +22,7 @@
                   <% low_stock_list.forEach(item => { %>
                     <% if (item.number_in_stock <= item.low_limit) { %>
                       <li class='low-limit-item'>
-                        <a href='<%= item.url %>'>
+                        <a href='/inventory/item/<%= item.id %>'>
                           <p><%= item.name %></p>
                           <p><strong><%= item.number_in_stock %></strong></p>
                         </a>
