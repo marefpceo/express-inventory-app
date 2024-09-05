@@ -6,11 +6,13 @@ const SubCategory = require('../models/subCategory');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const { unlinkSync } =require('node:fs');
+const db = require('../db/queries');
 
 
 // Displays list of all Items
 exports.item_list = asyncHandler(async (req, res, next) => {
-  const allItems = await Item.find().sort({ name: 1 }).exec();
+  // const allItems = await Item.find().sort({ name: 1 }).exec();
+  const allItems = await db.getItemsList();
 
   res.render('item_list', {
     title: 'Item List',
@@ -18,6 +20,10 @@ exports.item_list = asyncHandler(async (req, res, next) => {
   });
 });
 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // Displays list of all low stock items
 exports.item_low_stock = asyncHandler(async (req, res, next) => {
@@ -28,6 +34,17 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
     low_stock_list: allItems,
   });
 });
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 
 // Display detail page for a specific Item
