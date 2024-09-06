@@ -7,7 +7,7 @@ async function getSubcategoryNames() {
 }
 
 // Return selected subcategory 
-async function getSubcategory(subcategoryId) {
+async function getSelectedSubcategory(subcategoryId) {
   const { rows } = await pool.query(`
     SELECT subcategories.id, subcategories.subcategory_name, subcategories.category_id, category.category_name FROM subcategories, category 
     WHERE (subcategories.id = $1) AND (category.id = subcategories.category_id)
@@ -43,10 +43,19 @@ async function updateSubcategory(subcategoryName, categoryId, subcategoryId) {
     `, [subcategoryName, categoryId, subcategoryId]);
 }
 
+// Delete selected subcategory
+async function deleteSubcategory(subcategoryId) {
+  await pool.query(`
+    DELETE FROM subcategories 
+    WHERE id = ($1)
+    `, [subcategoryId]);
+}
+
 module.exports = {
   getSubcategoryNames,
-  getSubcategory,
+  getSelectedSubcategory,
   getSubcategoryItemsList,
   createSubcategory,
   updateSubcategory,
+  deleteSubcategory
 }

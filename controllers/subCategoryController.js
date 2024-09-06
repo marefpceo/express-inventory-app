@@ -21,7 +21,7 @@ exports.sub_category_list = asyncHandler(async (req, res, next) => {
 // Display detail page for a specific Category
 exports.sub_category_detail = asyncHandler(async (req, res, next) => {
   const subcategory = await db_subcategory.getSubcategoryItemsList(req.params.id);
-  const subcategoryName = await db_subcategory.getSubcategory(req.params.id);
+  const subcategoryName = await db_subcategory.getSelectedSubcategory(req.params.id);
 
   if (subcategory === null) {
     const err = new Error('Subcategory not found!');
@@ -85,7 +85,7 @@ exports.sub_category_create_post = [
 // Display Subcategory update form on GET
 exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
   const categories = await db_category.getCategoryNames();
-  const subcategory = await db_subcategory.getSubcategory(req.params.id);
+  const subcategory = await db_subcategory.getSelectedSubcategory(req.params.id);
 
   if(subcategory === null) {
     const err = new Error('Subcategory not found!');
@@ -116,7 +116,7 @@ exports.sub_category_update_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     const categories = await db_category.getCategoryNames();
-    const subcategory = await db_subcategory.getSubcategory(req.params.id);
+    const subcategory = await db_subcategory.getSelectedSubcategory(req.params.id);
 
     if(!errors.isEmpty()) {
       res.render('sub_category_update', {
@@ -142,19 +142,6 @@ exports.sub_category_update_post = [
 
 
 
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
 // Display Category delete form on GET
 exports.sub_cateogry_delete_get = asyncHandler(async (req, res, next) => {
   const [ subcategory, subcategory_items ] = await Promise.all([
@@ -172,6 +159,20 @@ exports.sub_cateogry_delete_get = asyncHandler(async (req, res, next) => {
     subcategory_items: subcategory_items,
   });
 });
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 
 
 // Handle Category delete on POST
