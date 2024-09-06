@@ -48,13 +48,6 @@ exports.sub_category_create_get = asyncHandler(async (req, res, next) => {
 });
 
 
-
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 // Handle Category create on POST
 exports.sub_category_create_post = [
   body('subcatName')
@@ -64,34 +57,38 @@ exports.sub_category_create_post = [
     .escape(),
   body('categorySelect')
     .trim()
-    .isLength({ min: 3 })
+    .isNumeric()
     .escape(),
   
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const [ allCategories, subcategory ] = await Promise.all([
-      Category.find().sort({ name: 1 }).exec(),
-      new SubCategory({
-        name: req.body.subcatName,
-        category: await Category.findById(req.body.categorySelect),
-      }),
-    ]);
+    const allCategories = await db_category.getCategoryNames();
 
-
-  if (!errors.isEmpty()) {
-    res.render('sub_category_form', {
-      title: 'Create Subcategory',
-      subcategory: subcategory,
-      categories: allCategories,
-      errors: errors.array(),
-    });
-    return;
+    if (!errors.isEmpty()) {
+      res.render('sub_category_form', {
+        title: 'Create Subcategory',
+        subcategory: req.body.subcatName,
+        categories: allCategories,
+        errors: errors.array(),
+      });
+      return;
     } else {
-      await subcategory.save();
+      await db_subcategory.createSubcategory(req.body.subcatName, req.body.categorySelect);
       res.redirect('/inventory/subcategories');
     }
   }),
 ];
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 
 

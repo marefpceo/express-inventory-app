@@ -15,7 +15,7 @@
                 <div class='form-input'>
                     <label for='subcatName'>Subcategory: </label>
                     <input type='text' name='subcatName' id='subcatName' required
-                        value='<%= typeof subcategory === 'undefined' ? '' : subcategory.name %>'>
+                        value='<%= typeof subcategory === 'undefined' ? '' : subcategory %>'>
                 </div>
                 <span class='subcategory-note'>
                     <sub>**Create a new category if an appropriate one is not listed.</sub>
@@ -33,10 +33,10 @@
                             <select name='categorySelect' id='categorySelect' required>
                                 <option value=''>--Select an option--</option>
                                 <% categories.forEach(listItem => { %>
-                                    <% if (listItem.id.toString() === subcategory.category_id.toString()) { %>
-                                        <option value='<%= listItem.id %>' selected><%= listItem.name %></option>
+                                    <% if (listItem.id === subcategory.category_id) { %>
+                                        <option value='<%= listItem.id %>' selected><%= listItem.category_name %></option>
                                         <% } else { %>
-                                            <option value='<%= listItem.id %>'><%= listItem.name %></option>
+                                            <option value='<%= listItem.id %>'><%= listItem.category_name %></option>
                                     <% } %>
                                 <% }) %>
                             </select>

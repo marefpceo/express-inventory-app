@@ -25,8 +25,18 @@ async function getSubcategoryList(subcategoryId) {
   return rows;
 }
 
+// Creates a new subcategory
+async function createSubcategory(subcategoryName, categoryId) {
+  const { rows } = await pool.query(`
+    INSERT INTO subcategories (subcategory_name, category_id)
+    VALUES ($1, $2)
+    `, [subcategoryName, categoryId]);
+    return rows;
+}
+
 module.exports = {
   getSubcategoryNames,
   getSubcategory,
   getSubcategoryList,
+  createSubcategory,
 }
