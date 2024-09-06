@@ -5,11 +5,12 @@ const Category = require('../models/category');
 const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
-const db = require('../db/subcategory_queries');
+const db_subcategory = require('../db/subcategory_queries');
+const db_category = require('../db/category_queries');
 
 // Displays list of all Categories
 exports.sub_category_list = asyncHandler(async (req, res, next) => {
-  const allSubcategories = await db.getSubcategoryNames();
+  const allSubcategories = await db_subcategory.getSubcategoryNames();
   res.render('sub_category_list', {
     title: 'Subcategory List',
     subcategory_list: allSubcategories,
@@ -19,8 +20,8 @@ exports.sub_category_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Category
 exports.sub_category_detail = asyncHandler(async (req, res, next) => {
-  const subcategory = await db.getSubcategoryList(req.params.id);
-  const subcategoryName = await db.getSubcategory(req.params.id);
+  const subcategory = await db_subcategory.getSubcategoryList(req.params.id);
+  const subcategoryName = await db_subcategory.getSubcategory(req.params.id);
 
   if (subcategory === null) {
     const err = new Error('Subcategory not found!');
@@ -36,32 +37,22 @@ exports.sub_category_detail = asyncHandler(async (req, res, next) => {
 });
 
 
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
 // Display Category create form on GET
 exports.sub_category_create_get = asyncHandler(async (req, res, next) => {
-  const allCategories = await Category.find().sort({ name: 1 }).exec();
+  const allCategories = await db_category.getCategoryNames();
 
   res.render('sub_category_form', {
     title: 'Create Subcategory',
     categories: allCategories,
   });
 });
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 // Handle Category create on POST
@@ -101,6 +92,19 @@ exports.sub_category_create_post = [
     }
   }),
 ];
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 
 // Display Category update form on GET
