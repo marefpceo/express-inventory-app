@@ -3,7 +3,7 @@ require('dotenv').config();
 const asyncHandler = require('express-async-handler');
 const { DateTime } = require('luxon');
 const { body, validationResult } = require('express-validator');
-const db = require('../db/queries');
+const db = require('../db/category_queries');
 
 
 // Displays index page with inventory overview stats

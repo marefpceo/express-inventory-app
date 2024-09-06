@@ -5,7 +5,7 @@ const Category = require('../models/category');
 const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
-const db = require('../db/queries');
+const db = require('../db/subcategory_queries');
 
 // Displays list of all Categories
 exports.sub_category_list = asyncHandler(async (req, res, next) => {
