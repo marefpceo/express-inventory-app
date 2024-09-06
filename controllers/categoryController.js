@@ -1,8 +1,5 @@
 require('dotenv').config();
 
-const Category = require('../models/category');
-const SubCategory = require('../models/subCategory');
-const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { DateTime } = require('luxon');
 const { body, validationResult } = require('express-validator');
@@ -130,7 +127,6 @@ exports.category_update_post = [
     const errors = validationResult(req);
     const selectedCategory = await db.getSelectedCategory(req.params.id);
 
-    console.log(selectedCategory);
     if(!errors.isEmpty()) {
       res.render('category_update', {
         title: 'Update Category',
@@ -146,30 +142,15 @@ exports.category_update_post = [
 ];
 
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
 // Display Category delete form on GET
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
-  // const [ category, subcategory_list, category_items ] = await Promise.all([
-  //   Category.findById(req.params.id).exec(),
-  //   SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
-  //   Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
-  // ]);
   const selectedCategory = await db.getSelectedCategory(req.params.id);
   const subcategoryList = await db.getAssignedSubcategories(req.params.id);
   const category_items = await db.getCategoryList(req.params.id);
 
-  console.log(subcategoryList);
   res.render('category_delete', {
     title: `Delete Category: ${selectedCategory[0].category_name}`,
-    category: selectedCategory,
+    category: selectedCategory[0],
     subcategory_list: subcategoryList,
     category_items: category_items,
   });
@@ -186,50 +167,30 @@ exports.category_delete_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const [ category, subcategory_list, category_items ] = await Promise.all([
-      Category.findById(req.params.id).exec(),
-      SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
-      Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
-    ]);
+    const selectedCategory = await db.getSelectedCategory(req.params.id);
+    const subcategoryList = await db.getAssignedSubcategories(req.params.id);
+    const category_items = await db.getCategoryList(req.params.id);
 
-    if((subcategory_list.length > 0) || (category_items.length > 0)) {
+    if((subcategoryList.length > 0) || (category_items.length > 0)) {
       res.render('category_delete', {
-        title: `Delete Category: ${category.name}`,
-        category: category,
-        subcategory_list: subcategory_list,
+        title: `Delete Category: ${selectedCategory[0].name}`,
+        category: selectedCategory[0],
+        subcategory_list: subcategoryList,
         category_items: category_items,
       });
       return;
     } else if(!errors.isEmpty()) {
       res.render('category_delete', {
-        title: `Delete Category: ${category.name}`,
-        category: category,
-        subcategory_list: subcategory_list,
+        title: `Delete Category: ${selectedCategory[0].name}`,
+        category: selectedCategory[0],
+        subcategory_list: subcategoryList,
         category_items: category_items,
         password: req.body.password,
         errors: errors.array(),
       });
     } else {
-        await Category.findByIdAndDelete(req.params.id).exec();
+        await db.deleteCategory(req.params.id);
         res.redirect('/inventory/categories');
       }
     })
 ];
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-

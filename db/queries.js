@@ -1,6 +1,5 @@
 const pool = require('./pool');
 
-
 // Returns inventory overview for index page
 async function getInventoryOverview() {
   const { rows } = await pool.query(`
@@ -14,7 +13,10 @@ async function getInventoryOverview() {
 }
 
 
+///////////////////////////////////////////////////////////
 /////////////// Category Controller Queries ///////////////
+///////////////////////////////////////////////////////////
+
 
 // Returns all category names
 async function getCategoryNames() {
@@ -37,9 +39,9 @@ async function getSelectedCategory(categoryId) {
 // Returns list of items for a specific category name
 async function getCategoryList(category) {
   const { rows } = await pool.query(`
-    SELECT * FROM items              
+    SELECT items.*, category.category_name FROM items              
     LEFT JOIN category ON items.category_id = category.id
-    WHERE (items.category_id = $1)
+    WHERE items.category_id = ($1)
     `, [category]);
   return rows;
 }
@@ -70,8 +72,20 @@ async function updateCategory(name, description, id) {
     `, [name, description, id]);
 }
 
+// Delete selected category
+async function deleteCategory(categoryId) {
+  await pool.query(`
+    DELETE FROM category
+    WHERE id = ($1)
+    `, [categoryId]);
+}
 
+
+//////////////////////////////////////////////////////////////
 /////////////// Subcategory Controller Queries ///////////////
+//////////////////////////////////////////////////////////////
+
+
 
 // Returns all subcategory names
 async function getSubcategoryNames() {
@@ -99,7 +113,11 @@ async function getSubcategoryList(subcategoryId) {
 }
 
 
+///////////////////////////////////////////////////////
 /////////////// Item Controller Queries ///////////////
+///////////////////////////////////////////////////////
+
+
 
 // Returns list of all Items
 async function getItemsList() {
@@ -143,6 +161,7 @@ module.exports = {
   getCategoryList,
   createCategory,
   updateCategory,
+  deleteCategory,
   getSubcategoryNames,
   getSubcategory,
   getSubcategoryList,
