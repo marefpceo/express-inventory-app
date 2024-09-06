@@ -58,6 +58,13 @@ exports.category_create_get = asyncHandler(async (req, res, next) => {
 });
 
 
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
 // Handle Category create on POST
 exports.category_create_post = [
   body('name')
@@ -72,25 +79,33 @@ exports.category_create_post = [
     .escape(),
 
   asyncHandler(async (req, res, next) => {
+    const name = req.body.name;
+    const cat_description = req.body.cat_description;
     const errors = validationResult(req);
-    const category = new Category({
-      name: req.body.name,
-      cat_description: req.body.cat_description,
-    });
 
-  if (!errors.isEmpty()) {
-    res.render('category_form', {
-      title: 'Create Category',
-      category: category,
-      errors: errors.array(),
-    });
-    return;
-  } else {
-    await category.save();
-    res.redirect(category.url);
-  }
-}),
-];
+    if (!errors.isEmpty()) {
+      res.render('category_form', {
+        title: 'Create Category',
+        name: name,
+        cat_description: cat_description,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await db.createCategory(name, cat_description);
+      res.redirect('/inventory/categories');
+    }
+  }),
+  ];
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 // Display Category update form on GET

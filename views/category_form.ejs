@@ -14,12 +14,12 @@
                 <div class='form-input'>
                     <label for='name'>Category: </label>
                     <input type='text' name='name' id='name' required
-                        value='<%= typeof category === 'undefined' ? '' : category.name %>'>
+                        value='<%= typeof category === 'undefined' ? '' : name %>'>
                 </div>
                 <div class='form-input'>
                     <label for='cat_description'>Description: </label>
                     <textarea name='cat_description' id='cat_description' cols='30' rows='5' required
-                        value='<%= typeof category === 'undefined' ? '' : category.cat_description %>'>
+                        value='<%= typeof category === 'undefined' ? '' : cat_description %>'>
                     </textarea>
                 </div>
             </div>

@@ -31,6 +31,16 @@ async function getCategoryList(category) {
   return rows;
 }
 
+// Creates a new category entry
+async function createCategory(name, description) {
+  await pool.query(`
+    INSERT INTO category (category_name, category_description)
+    VALUES ($1, $2)
+    `, [name, description]);
+}
+
+
+
 /////////////// Subcategory Controller Queries ///////////////
 
 // Returns all subcategory names
@@ -98,6 +108,7 @@ module.exports = {
   getInventoryOverview,
   getCategoryNames,
   getCategoryList,
+  createCategory,
   getSubcategoryNames,
   getSubcategory,
   getSubcategoryList,
