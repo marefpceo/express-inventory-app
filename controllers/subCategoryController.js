@@ -85,7 +85,7 @@ exports.sub_category_create_post = [
 // Display Subcategory update form on GET
 exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
   const categories = await db_category.getCategoryNames();
-  const subcategory = await db_subcategory.getSubcategoryItemsList(req.params.id);
+  const subcategory = await db_subcategory.getSubcategory(req.params.id);
 
   if(subcategory === null) {
     const err = new Error('Subcategory not found!');
@@ -96,9 +96,42 @@ exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
   res.render('sub_category_update', {
     title: 'Update Subcategory',
     categories: categories,
-    subcategory: subcategory,
+    subcategory: subcategory[0],
   });
 });
+
+
+// Handle Category update form on POST
+exports.sub_category_update_post = [
+  body('subcatName')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Subcategory must contain at least 3 characters')
+    .escape(),
+  body('categorySelect')
+    .trim()
+    .isNumeric()
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const categories = await db_category.getCategoryNames();
+    const subcategory = await db_subcategory.getSubcategory(req.params.id);
+
+    if(!errors.isEmpty()) {
+      res.render('sub_category_update', {
+        title: 'Update Subcategory',
+        subcategory: subcategory[0],
+        categories: categories,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await db_subcategory.updateSubcategory(req.body.subcatName, req.body.categorySelect, req.params.id);
+      res.redirect('/inventory/subcategories');
+    }
+  })
+];
 
 
 
@@ -120,48 +153,6 @@ exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
 
 
 
-
-
-
-
-
-
-
-// Handle Category update form on POST
-exports.sub_category_update_post = [
-  body('subcatName')
-  .trim()
-  .isLength({ min: 3 })
-  .withMessage('Subcategory must contain at least 3 characters')
-  .escape(),
-body('categorySelect')
-  .trim()
-  .isLength({ min: 3 })
-  .escape(),
-
-  asyncHandler(async (req, res, next) => {
-    const errors = validationResult(req);
-    const categories = await Category.find().sort({ name: 1 }).exec();
-    const subcategory = new SubCategory({
-      name: req.body.subcatName,
-      category: await Category.findById(req.body.categorySelect),
-      _id: req.params.id,
-    });
-
-    if(!errors.isEmpty()) {
-      res.render('sub_category_update', {
-        title: 'Update Subcategory',
-        subcategory: subcategory,
-        categories: categories,
-        errors: errors.array(),
-      });
-      return;
-    } else {
-      const updatedSubCategory = await SubCategory.findByIdAndUpdate(req.params.id, subcategory, {}).exec();
-      res.redirect(updatedSubCategory.url);
-    }
-  })
-];
 
 
 // Display Category delete form on GET

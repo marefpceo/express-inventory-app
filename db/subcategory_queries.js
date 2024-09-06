@@ -9,7 +9,7 @@ async function getSubcategoryNames() {
 // Return selected subcategory 
 async function getSubcategory(subcategoryId) {
   const { rows } = await pool.query(`
-    SELECT subcategories.id, subcategories.subcategory_name, category.category_name FROM subcategories, category 
+    SELECT subcategories.id, subcategories.subcategory_name, subcategories.category_id, category.category_name FROM subcategories, category 
     WHERE (subcategories.id = $1) AND (category.id = subcategories.category_id)
     `, [subcategoryId]);
   return rows;
@@ -34,9 +34,19 @@ async function createSubcategory(subcategoryName, categoryId) {
     return rows;
 }
 
+// Updates selected subcategory
+async function updateSubcategory(subcategoryName, categoryId, subcategoryId) {
+  await pool.query(`
+    UPDATE subcategories 
+    SET subcategory_name = ($1), category_id = ($2)
+    WHERE id = ($3)
+    `, [subcategoryName, categoryId, subcategoryId]);
+}
+
 module.exports = {
   getSubcategoryNames,
   getSubcategory,
   getSubcategoryItemsList,
   createSubcategory,
+  updateSubcategory,
 }
