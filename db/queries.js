@@ -18,15 +18,25 @@ async function getInventoryOverview() {
 
 // Returns all category names
 async function getCategoryNames() {
-  const { rows } = await pool.query('SELECT category_name FROM category');
+  const { rows } = await pool.query('SELECT id, category_name FROM category');
+  return rows;
+}
+
+// Returns selected category
+async function getSelectedCategory(categoryId) {
+  const { rows } = await pool.query(`
+    SELECT * FROM category
+    WHERE (id = $1)  
+    `, [categoryId]);
   return rows;
 }
 
 // Returns list of items for a specific category name
 async function getCategoryList(category) {
   const { rows } = await pool.query(`
-    SELECT * FROM items, category
-    WHERE (items.category_id = category.id) AND (category.category_name = $1)
+    SELECT * FROM items              
+    LEFT JOIN category ON items.category_id = category.id
+    WHERE (items.category_id = $1);
     `, [category]);
   return rows;
 }
@@ -106,6 +116,7 @@ async function getItem(itemId) {
 
 module.exports = {
   getInventoryOverview,
+  getSelectedCategory,
   getCategoryNames,
   getCategoryList,
   createCategory,

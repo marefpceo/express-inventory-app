@@ -12,7 +12,7 @@
             <div class='cards'>
               <% if (category_list) { %>
                 <% category_list.forEach(category => { %>
-                  <a href='/inventory/category/<%= category.category_name %>'>
+                  <a href='/inventory/category/<%= category.id %>'>
                       <div class='category-card'>
                           <h3><%= category.category_name %></h3>
                       </div>

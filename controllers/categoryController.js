@@ -36,6 +36,7 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 // Display detail page for a specific Category
 exports.category_detail = asyncHandler(async (req, res, next) => {
   const categoryList = await db.getCategoryList(req.params.id);
+  const selectedCategory = await db.getSelectedCategory(req.params.id);
 
   if (categoryList === null) {
     const err = new Error('Category not found!');
@@ -44,7 +45,8 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   }
 
   res.render('category_detail', {
-    title: `${req.params.id} Items`,
+    title: `${selectedCategory[0].category_name} Items`,
+    description: selectedCategory[0].category_description,
     category: categoryList,
   });
 });
