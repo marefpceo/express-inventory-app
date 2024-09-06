@@ -18,7 +18,10 @@ async function getInventoryOverview() {
 
 // Returns all category names
 async function getCategoryNames() {
-  const { rows } = await pool.query('SELECT id, category_name FROM category');
+  const { rows } = await pool.query(`
+    SELECT id, category_name FROM category
+    ORDER BY category_name ASC
+    `);
   return rows;
 }
 
@@ -36,8 +39,17 @@ async function getCategoryList(category) {
   const { rows } = await pool.query(`
     SELECT * FROM items              
     LEFT JOIN category ON items.category_id = category.id
-    WHERE (items.category_id = $1);
+    WHERE (items.category_id = $1)
     `, [category]);
+  return rows;
+}
+
+//Returns list of subcategories assigned to specific category
+async function getAssignedSubcategories(categoryId) {
+  const { rows } = await pool.query(`
+    SELECT * FROM subcategories
+    WHERE category_id = ($1)
+    `, [categoryId]);
   return rows;
 }
 
@@ -49,6 +61,14 @@ async function createCategory(name, description) {
     `, [name, description]);
 }
 
+// Updates selected category
+async function updateCategory(name, description, id) {
+  await pool.query(`
+    UPDATE category
+    SET category_name = ($1), category_description = ($2)
+    WHERE id = ($3)
+    `, [name, description, id]);
+}
 
 
 /////////////// Subcategory Controller Queries ///////////////
@@ -69,14 +89,15 @@ async function getSubcategory(subcategoryId) {
 }
 
 // Returns list of items for a specific subcategory name
-async function getSubcategoryList(subcategory) {
+async function getSubcategoryList(subcategoryId) {
   const { rows } = await pool.query(`
     SELECT * FROM items, subcategories
     WHERE (items.subcategory_id = $1) 
       AND (subcategories.id = items.subcategory_id)
-    `, [subcategory]);
+    `, [subcategoryId]);
   return rows;
 }
+
 
 /////////////// Item Controller Queries ///////////////
 
@@ -117,9 +138,11 @@ async function getItem(itemId) {
 module.exports = {
   getInventoryOverview,
   getSelectedCategory,
+  getAssignedSubcategories,
   getCategoryNames,
   getCategoryList,
   createCategory,
+  updateCategory,
   getSubcategoryNames,
   getSubcategory,
   getSubcategoryList,

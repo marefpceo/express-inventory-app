@@ -47,6 +47,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   res.render('category_detail', {
     title: `${selectedCategory[0].category_name} Items`,
     description: selectedCategory[0].category_description,
+    catId: selectedCategory[0].id,
     category: categoryList,
   });
 });
@@ -58,13 +59,6 @@ exports.category_create_get = asyncHandler(async (req, res, next) => {
     title: 'Create Category',
   });
 });
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Handle Category create on POST
@@ -98,21 +92,13 @@ exports.category_create_post = [
       res.redirect('/inventory/categories');
     }
   }),
-  ];
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
+];
 
 
 // Display Category update form on GET
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-  const category = await Category.findById(req.params.id).exec();
+  // const category = await Category.findById(req.params.id).exec();
+  const category = await db.getSelectedCategory(req.params.id);
 
   if(category === null) {
     const err = new Error('Category not found!');
@@ -122,7 +108,7 @@ exports.category_update_get = asyncHandler(async (req, res, next) => {
 
   res.render('category_update', {
     title: 'Update Category',
-    category: category,
+    category: category[0],
   });
 });
 
@@ -142,39 +128,49 @@ exports.category_update_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const category = new Category({
-      name: req.body.name,
-      cat_description: req.body.cat_description,
-      _id: req.params.id,
-    });
+    const selectedCategory = await db.getSelectedCategory(req.params.id);
 
+    console.log(selectedCategory);
     if(!errors.isEmpty()) {
       res.render('category_update', {
         title: 'Update Category',
-        category: category,
+        category: selectedCategory[0],
         errors: errors.array(),
       });
       return;
     } else {
-      const updatedCategory = await Category.findByIdAndUpdate(req.params.id, category, {}).exec()
-      res.redirect(updatedCategory.url);
+      await db.updateCategory(req.body.name, req.body.cat_description, req.params.id);
+      res.redirect('/inventory/categories');
     }
   }),
 ];
 
 
-// Display Category delete form on GET
-exports.cateogry_delete_get = asyncHandler(async (req, res, next) => {
-  const [ category, subcategory_list, category_items ] = await Promise.all([
-    Category.findById(req.params.id).exec(),
-    SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
-    Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
-  ]);
 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+// Display Category delete form on GET
+exports.category_delete_get = asyncHandler(async (req, res, next) => {
+  // const [ category, subcategory_list, category_items ] = await Promise.all([
+  //   Category.findById(req.params.id).exec(),
+  //   SubCategory.find({ category: req.params.id }, 'name').sort({ name: 1 }).exec(),
+  //   Item.find({ category: req.params.id }, 'name brand').sort({ name: 1 }).exec(),
+  // ]);
+  const selectedCategory = await db.getSelectedCategory(req.params.id);
+  const subcategoryList = await db.getAssignedSubcategories(req.params.id);
+  const category_items = await db.getCategoryList(req.params.id);
+
+  console.log(subcategoryList);
   res.render('category_delete', {
-    title: `Delete Category: ${category.name}`,
-    category: category,
-    subcategory_list: subcategory_list,
+    title: `Delete Category: ${selectedCategory[0].category_name}`,
+    category: selectedCategory,
+    subcategory_list: subcategoryList,
     category_items: category_items,
   });
 });
@@ -219,3 +215,21 @@ exports.category_delete_post = [
       }
     })
 ];
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+

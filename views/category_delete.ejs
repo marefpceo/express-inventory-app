@@ -18,7 +18,7 @@
 
           <% if (category_items.length > 0) { %>
             <div class='list-header'>
-              <p>Item</p>
+              <p>Items</p>
             </div>
           <% } %>
           
@@ -45,28 +45,21 @@
 
           <% if (subcategory_list.length > 0) { %>
             <div class='list-header'>
-              <p>Subcategory</p>
+              <p>Subcategorys</p>
             </div>
           <% } %>
           
           <ul class='item-list'>
            
               <% subcategory_list.forEach(item => { %>
-                <% if (item.number_in_stock <= item.low_limit) { %>
-                <li class='low-limit-item'>
-                  <a href='<%= item.url %>'>
-                    <p><%= item.name %><strong><em><%= item.brand %></em></strong></p>
-                    <p><strong><%= item.number_in_stock %></strong></p>
-                  </a>
-                </li>
-                    <% } else { %>
+                
                       <li>
                         <a href='<%= item.url %>'>
-                          <p><%= item.name %><strong><em><%= item.brand %></em></strong></p>
+                          <p><%= item.subcategory_name %><strong><em><%= item.brand %></em></strong></p>
                           <p><strong><%= item.number_in_stock %></strong></p>
                         </a>
                       </li>
-                  <% } %>
+                 
               <% }) %>
           </ul>
           <% } %>
