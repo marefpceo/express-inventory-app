@@ -20,7 +20,7 @@ exports.sub_category_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Category
 exports.sub_category_detail = asyncHandler(async (req, res, next) => {
-  const subcategory = await db_subcategory.getSubcategoryList(req.params.id);
+  const subcategory = await db_subcategory.getSubcategoryItemsList(req.params.id);
   const subcategoryName = await db_subcategory.getSubcategory(req.params.id);
 
   if (subcategory === null) {
@@ -29,9 +29,11 @@ exports.sub_category_detail = asyncHandler(async (req, res, next) => {
     return next(err);
   }
 
+  console.log(subcategory);
   res.render('sub_category_detail', {
     title: `${subcategoryName[0].subcategory_name} List`,
     category: subcategoryName[0].category_name,
+    subcatId: req.params.id,
     subcategory: subcategory
   });
 });
@@ -80,6 +82,24 @@ exports.sub_category_create_post = [
 ];
 
 
+// Display Subcategory update form on GET
+exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
+  const categories = await db_category.getCategoryNames();
+  const subcategory = await db_subcategory.getSubcategoryItemsList(req.params.id);
+
+  if(subcategory === null) {
+    const err = new Error('Subcategory not found!');
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render('sub_category_update', {
+    title: 'Update Subcategory',
+    categories: categories,
+    subcategory: subcategory,
+  });
+});
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -104,23 +124,7 @@ exports.sub_category_create_post = [
 
 
 
-// Display Category update form on GET
-exports.sub_category_update_get = asyncHandler(async (req, res, next) => {
-  const subcategory = await SubCategory.findById(req.params.id).exec();
-  const categories = await Category.find().sort({ name: 1 }).exec();
 
-  if(subcategory === null) {
-    const err = new Error('Subcategory not found!');
-    err.status = 404;
-    return next(err);
-  }
-
-  res.render('sub_category_update', {
-    title: 'Update Subcategory',
-    categories: categories,
-    subcategory: subcategory,
-  });
-});
 
 
 // Handle Category update form on POST

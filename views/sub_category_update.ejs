@@ -33,10 +33,10 @@
                             <select name='categorySelect' id='categorySelect' required>
                                 <option value=''>--Select an option--</option>
                                 <% categories.forEach(listItem => { %>
-                                    <% if (listItem._id.toString() === subcategory.category._id.toString()) { %>
-                                        <option value='<%= listItem._id %>' selected><%= listItem.name %></option>
+                                    <% if (listItem.id === subcategory.category_id) { %>
+                                        <option value='<%= listItem.id %>' selected><%= listItem.category_name %></option>
                                         <% } else { %>
-                                            <option value='<%= listItem._id %>'><%= listItem.name %></option>
+                                            <option value='<%= listItem.id %>'><%= listItem.category_name %></option>
                                     <% } %>
                                 <% }) %>
                             </select>
