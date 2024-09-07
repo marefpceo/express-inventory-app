@@ -6,12 +6,12 @@ const SubCategory = require('../models/subCategory');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const { unlinkSync } =require('node:fs');
-const db = require('../db/queries');
+const db_items = require('../db/item_queries');
 
 
 // Displays list of all Items
 exports.item_list = asyncHandler(async (req, res, next) => {
-  const allItems = await db.getItemsList();
+  const allItems = await db_items.getItemsList();
 
   res.render('item_list', {
     title: 'Item List',
@@ -22,7 +22,7 @@ exports.item_list = asyncHandler(async (req, res, next) => {
 
 // Displays list of all low stock items
 exports.item_low_stock = asyncHandler(async (req, res, next) => {
-  const lowStockItems = await db.getLowStockItems();
+  const lowStockItems = await db_items.getLowStockItems();
 
   res.render('item_low_stock', {
     title: 'Low Stock Items',
@@ -33,7 +33,7 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Item
 exports.item_detail = asyncHandler(async (req, res, next) => {
-  const temp = await db.getItem(req.params.id);
+  const temp = await db_items.getItem(req.params.id);
   const item = temp[0];
   console.log(item);
 
@@ -50,32 +50,11 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
   });
 });
 
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
 
 // Display Item create form on GET
 exports.item_create_get = asyncHandler(async (req, res, next) => {
-  const [allCategories, allSubCategories] = await Promise.all([
-    Category.find().sort({ name: 1 }).exec(),
-    SubCategory.find().sort({ name: 1 }).exec(),
-  ]);
+  const allCategories = await db_items.getAllCategories();
+  const allSubCategories = await db_items.getAllSubcategories();
 
   res.render('item_form', {
     title: 'Create Item',
@@ -83,6 +62,13 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
     sub_categories: allSubCategories,
   });
 });
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 // Handle Item create on POST
@@ -162,6 +148,17 @@ exports.item_create_post = [
     }
   })
 ];
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 
 // Display Item update form on GET

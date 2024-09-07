@@ -56,10 +56,10 @@
                           <% if (typeof item === 'undefined') { %>
                             <option value=''>--Select an option--</option>
                             <% categories.forEach(category => { %>
-                              <optgroup label='<%= category.name %>'>
+                              <optgroup label='<%= category.category_name %>'>
                                 <% sub_categories.forEach(subcategory => { %>
-                                 <% if (subcategory.category._id.toString() === category._id.toString()) { %>
-                                  <option value='<%= subcategory._id %>'><%= subcategory.name %></option>
+                                 <% if (subcategory.category_id === category.id) { %>
+                                  <option value='<%= subcategory.id %>'><%= subcategory.subcategory_name %></option>
                                  <% } %>
                                 <% }) %>
                               </optgroup>
@@ -67,13 +67,13 @@
                             <% } else { %>
                               <option value=''>--Select an option--</option>
                               <% categories.forEach(category => { %>
-                                <optgroup label='<%= category.name %>'>
+                                <optgroup label='<%= category.category_name %>'>
                                   <% sub_categories.forEach(subcategory => { %>
-                                   <% if (subcategory.category._id.toString() === category._id.toString()) { %>
-                                    <% if (item.sub_category._id.toString() === subcategory._id.toString()) { %>
-                                      <option value='<%= subcategory._id %>' selected><%= subcategory.name %></option>
+                                   <% if (subcategory.category_id === category.id) { %>
+                                    <% if (item.subcategory_id === subcategory.id) { %>
+                                      <option value='<%= subcategory.id %>' selected><%= subcategory.subcategory_name %></option>
                                     <% } %>
-                                    <option value='<%= subcategory._id %>'><%= subcategory.name %></option>
+                                    <option value='<%= subcategory.id %>'><%= subcategory.subcategory_name %></option>
                                    <% } %>
                                   <% }) %>
                                 </optgroup>
