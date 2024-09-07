@@ -23,7 +23,8 @@ async function getLowStockItems() {
 async function getItem(itemId) {
   const { rows } = await pool.query(`
     SELECT items.id, items.name, items.brand, items.description, items.price, items.number_in_stock, 
-      items.low_limit, items.item_image_url, category.category_name, subcategories.subcategory_name 
+      items.low_limit, items.category_id, items.subcategory_id, items.item_image_url, category.category_name, 
+      subcategories.subcategory_name 
     FROM items 
     LEFT JOIN category ON items.category_id = category.id 
     LEFT JOIN subcategories ON items.subcategory_id = subcategories.id
@@ -55,7 +56,8 @@ async function createItem(name, brand, description, price, number_in_stock, low_
     INSERT INTO items (name, brand, description, price, number_in_stock, low_limit, category_id, 
       subcategory_id, item_image_url)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)  
-  `, [name, brand, description, price, number_in_stock, low_limit, category_id, subcategory_id, item_image_url])
+  `, [name, brand, description, price, number_in_stock, low_limit, category_id, subcategory_id, 
+      item_image_url]);
 }
 
 

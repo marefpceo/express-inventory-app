@@ -101,23 +101,6 @@ exports.item_create_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    // const [ allCategories, allSubCategories, item ] = await Promise.all([
-    //   Category.find().sort({ name: 1 }).exec(),
-    //   SubCategory.find().sort({ name: 1 }).exec(),
-    //   new Item({
-    //     name: req.body.itemName,
-    //     brand: req.body.itemBrand,
-    //     price: req.body.itemPrice,
-    //     number_in_stock: req.body.itemStockCount,
-    //     low_limit: req.body.itemLowLimit,
-    //     description: req.body.itemDescription,
-    //     sub_category: await SubCategory.findById(req.body.categorySelect).exec(),
-    //     category: await Category.findById(
-    //       (await SubCategory.findById(req.body.categorySelect).exec()).category
-    //       ),
-    //     item_image: typeof req.file === 'undefined' ? '' : req.file.filename,
-    //   }),
-    // ]);
     const allCategories = await db_items.getAllCategories();
     const allSubCategories = await db_items.getAllSubcategories();
     const selectedSubcategory = await db_subcategory.getSelectedSubcategory(req.body.subCategorySelect);
@@ -159,35 +142,29 @@ exports.item_create_post = [
 ];
 
 
-
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
 // Display Item update form on GET
 exports.item_update_get = asyncHandler(async (req, res, next) => {
-  const [ item, categories, subcategories ] = await Promise.all([
-    Item.findById(req.params.id).exec(),
-    Category.find().sort({ name: 1 }).exec(),
-    SubCategory.find().sort({ name: 1 }).exec(),
-  ]);
+  const item = await db_items.getItem(req.params.id);
+  const categories = await db_items.getAllCategories();
+  const subcategories = await db_items.getAllSubcategories();
   
+  console.log(item);
+
   res.render('item_update', {
     title: 'Update Item',
-    item: item,
+    item: item[0],
     categories: categories,
     sub_categories: subcategories,
-    stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
+    stored_item_image: item[0].item_image_url === null || undefined || '' ? '/images/Placeholder-view.png' : `/uploads/${item[0].item_image_url}`,
   });
 });
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Handle Item update form on POST
@@ -270,6 +247,15 @@ exports.item_update_post = [
       }
   })
 ];
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 // Display Item delete form on GET
