@@ -23,7 +23,7 @@ async function getLowStockItems() {
 async function getItem(itemId) {
   const { rows } = await pool.query(`
     SELECT items.id, items.name, items.brand, items.description, items.price, items.number_in_stock, 
-      items.low_limit, category.category_name, subcategories.subcategory_name 
+      items.low_limit, items.item_image_url, category.category_name, subcategories.subcategory_name 
     FROM items 
     LEFT JOIN category ON items.category_id = category.id 
     LEFT JOIN subcategories ON items.subcategory_id = subcategories.id

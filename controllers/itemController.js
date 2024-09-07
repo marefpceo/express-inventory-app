@@ -46,7 +46,7 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
   res.render('item_detail', {
     title: 'Detail Page',
     item: item,
-    stored_item_image: item.item_image === undefined ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
+    stored_item_image: item.item_image_url === null || undefined || '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image_url}`,
   });
 });
 
@@ -66,9 +66,6 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 //////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 // Handle Item create on POST
