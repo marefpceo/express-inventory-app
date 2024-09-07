@@ -48,6 +48,16 @@ async function getAllSubcategories() {
   return rows;
 }
 
+// Create a new item
+async function createItem(name, brand, description, price, number_in_stock, low_limit, category_id, 
+    subcategory_id, item_image_url) {
+  await pool.query(`
+    INSERT INTO items (name, brand, description, price, number_in_stock, low_limit, category_id, 
+      subcategory_id, item_image_url)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)  
+  `, [name, brand, description, price, number_in_stock, low_limit, category_id, subcategory_id, item_image_url])
+}
+
 
 module.exports = {
   getItemsList,
@@ -55,4 +65,5 @@ module.exports = {
   getItem,
   getAllCategories,
   getAllSubcategories,
+  createItem
 }

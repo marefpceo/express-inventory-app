@@ -7,6 +7,7 @@ const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const { unlinkSync } =require('node:fs');
 const db_items = require('../db/item_queries');
+const db_subcategory = require('../db/subcategory_queries');
 
 
 // Displays list of all Items
@@ -63,10 +64,6 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
   });
 });
 
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
 
 // Handle Item create on POST
 exports.item_create_post = [
@@ -104,23 +101,37 @@ exports.item_create_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const [ allCategories, allSubCategories, item ] = await Promise.all([
-      Category.find().sort({ name: 1 }).exec(),
-      SubCategory.find().sort({ name: 1 }).exec(),
-      new Item({
-        name: req.body.itemName,
-        brand: req.body.itemBrand,
-        price: req.body.itemPrice,
-        number_in_stock: req.body.itemStockCount,
-        low_limit: req.body.itemLowLimit,
-        description: req.body.itemDescription,
-        sub_category: await SubCategory.findById(req.body.categorySelect).exec(),
-        category: await Category.findById(
-          (await SubCategory.findById(req.body.categorySelect).exec()).category
-          ),
-        item_image: typeof req.file === 'undefined' ? '' : req.file.filename,
-      }),
-    ]);
+    // const [ allCategories, allSubCategories, item ] = await Promise.all([
+    //   Category.find().sort({ name: 1 }).exec(),
+    //   SubCategory.find().sort({ name: 1 }).exec(),
+    //   new Item({
+    //     name: req.body.itemName,
+    //     brand: req.body.itemBrand,
+    //     price: req.body.itemPrice,
+    //     number_in_stock: req.body.itemStockCount,
+    //     low_limit: req.body.itemLowLimit,
+    //     description: req.body.itemDescription,
+    //     sub_category: await SubCategory.findById(req.body.categorySelect).exec(),
+    //     category: await Category.findById(
+    //       (await SubCategory.findById(req.body.categorySelect).exec()).category
+    //       ),
+    //     item_image: typeof req.file === 'undefined' ? '' : req.file.filename,
+    //   }),
+    // ]);
+    const allCategories = await db_items.getAllCategories();
+    const allSubCategories = await db_items.getAllSubcategories();
+    const selectedSubcategory = await db_subcategory.getSelectedSubcategory(req.body.subCategorySelect);
+    const item = {
+      name: req.body.itemName,
+      brand: req.body.itemBrand,
+      description: req.body.itemDescription,
+      price: req.body.itemPrice,
+      number_in_stock: req.body.itemStockCount,
+      low_limit: req.body.itemLowLimit,
+      category_id: selectedSubcategory[0].category_id,
+      subcategory_id: req.body.subCategorySelect,
+      item_image_url: typeof req.file === 'undefined' ? '' : req.file.filename,
+    }
 
     if (!errors.isEmpty()) {
       res.render('item_form', {
@@ -132,7 +143,11 @@ exports.item_create_post = [
       });
 
         try {
-          unlinkSync(`public/uploads/${item.item_image}`);
+          if (item.item_image_url !== '') {
+            unlinkSync(`public/uploads/${item.item_image_url}`);
+          } else {
+            return;
+          }
         } catch (err) {
           console.log(err);
           return next(err);
@@ -140,8 +155,9 @@ exports.item_create_post = [
         
       return;
     } else {
-      await item.save();
-      res.redirect(item.url);
+      await db_items.createItem(item.name, item.brand, item.description, item.price, item.number_in_stock,
+        item.low_limit, item.category_id, item.subcategory_id, item.item_image_url);
+      res.redirect('/inventory/items');
     }
   })
 ];
@@ -149,13 +165,8 @@ exports.item_create_post = [
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 
 // Display Item update form on GET
@@ -174,6 +185,13 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
     stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
   });
 });
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 // Handle Item update form on POST

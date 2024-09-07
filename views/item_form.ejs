@@ -50,15 +50,15 @@
                 </span>
             
                   <div class='fieldset-form-input'>
-                    <label for='categorySelect'>Category/ Subcategory</label>
-                      <select name='categorySelect' id='categorySelect' required>
+                    <label for='subCategorySelect'>Category/ Subcategory</label>
+                      <select name='subCategorySelect' id='subCategorySelect' required>
                           
-                          <% if (typeof item === 'undefined') { %>
+                          <% if (typeof item == 'undefined') { %>
                             <option value=''>--Select an option--</option>
                             <% categories.forEach(category => { %>
                               <optgroup label='<%= category.category_name %>'>
                                 <% sub_categories.forEach(subcategory => { %>
-                                 <% if (subcategory.category_id === category.id) { %>
+                                 <% if (subcategory.category_id == category.id) { %>
                                   <option value='<%= subcategory.id %>'><%= subcategory.subcategory_name %></option>
                                  <% } %>
                                 <% }) %>
@@ -69,11 +69,13 @@
                               <% categories.forEach(category => { %>
                                 <optgroup label='<%= category.category_name %>'>
                                   <% sub_categories.forEach(subcategory => { %>
-                                   <% if (subcategory.category_id === category.id) { %>
-                                    <% if (item.subcategory_id === subcategory.id) { %>
-                                      <option value='<%= subcategory.id %>' selected><%= subcategory.subcategory_name %></option>
+                                   <% if (subcategory.category_id == category.id) { %>
+                                    <% if (item.subcategory_id == subcategory.id) { %>
+                                      <option value='<%= item.subcategory_id %>' selected><%= subcategory.subcategory_name %></option>
+                                      <% } else { %>
+                                        <option value='<%= subcategory.id %>'><%= subcategory.subcategory_name %></option>
                                     <% } %>
-                                    <option value='<%= subcategory.id %>'><%= subcategory.subcategory_name %></option>
+                                    
                                    <% } %>
                                   <% }) %>
                                 </optgroup>
@@ -83,8 +85,8 @@
                       </select>
                   </div>
 
-                  <label for='item_image'>Upload Item Image: </label>
-                  <input type='file' name='item_image' id='item_image' accept='image/*'>
+                  <label for='item_image_url'>Upload Item Image: </label>
+                  <input type='file' name='item_image_url' id='item_image_url' accept='image/*'>
               </div>
             </div>
 
