@@ -1,8 +1,5 @@
 require('dotenv').config();
 
-const SubCategory = require('../models/subCategory');
-const Category = require('../models/category');
-const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const db_subcategory = require('../db/subcategory_queries');
@@ -134,48 +131,24 @@ exports.sub_category_update_post = [
 ];
 
 
-
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-// Display Category delete form on GET
+// Display Subcategory delete form on GET
 exports.sub_cateogry_delete_get = asyncHandler(async (req, res, next) => {
-  const [ subcategory, subcategory_items ] = await Promise.all([
-    await SubCategory.findById(req.params.id).exec(),
-    Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
-  ]);
+  const subcategory = await db_subcategory.getSelectedSubcategory(req.params.id);
+  const subcategoryList = await db_subcategory.getSubcategoryItemsList(req.params.id);
 
   if (subcategory === null) {
     res.redirect('/inventory/subcateogries');
   }
 
   res.render('sub_category_delete', {
-    title: `Delete ${subcategory.name}`,
-    subcategory: subcategory,
-    subcategory_items: subcategory_items,
+    title: `Delete ${subcategory[0].subcategory_name}`,
+    subcategory: subcategory[0],
+    subcategory_items: subcategoryList,
   });
 });
 
 
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-// Handle Category delete on POST
+// Handle Subcategory delete on POST
 exports.sub_category_delete_post = [
   body('password')
     .trim()
@@ -185,29 +158,28 @@ exports.sub_category_delete_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const [ subcategory, subcategory_items ] = await Promise.all([
-      await SubCategory.findById(req.params.id).exec(),
-      Item.find({ sub_category: req.params.id }, 'name brand number_in_stock low_limit').sort({ name: 1 }).exec(),
-    ]);
+    const subcategory = await db_subcategory.getSelectedSubcategory(req.params.id);
+    const subcategoryList = await db_subcategory.getSubcategoryItemsList(req.params.id);
 
-    if(subcategory_items.length > 0) {
+    if(subcategoryList.length > 0) {
       res.render('sub_category_delete', {
-        title: `Delete ${subcategory.name}`,
+        title: `Delete ${subcategory[0].subcategory_name}`,
         subcategory: subcategory,
-        subcategory_items: subcategory_items,
+        subcategory_items: subcategoryList,
       });
       return;
     } else if(!errors.isEmpty()) {
         res.render('sub_category_delete', {
-          title: `Delete ${subcategory.name}`,
+          title: `Delete ${subcategory[0].subcategory_name}`,
           subcategory: subcategory,
-          subcategory_items: subcategory_items,
+          subcategory_items: subcategoryList,
           password: req.body.password,
           errors: errors.array(),
         });
       } else {
-          await SubCategory.findByIdAndDelete(req.params.id).exec();
+          await db_subcategory.deleteSubcategory(req.params.id);
           res.redirect('/inventory/subcategories');
       }
   })
 ];
+

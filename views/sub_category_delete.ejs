@@ -21,13 +21,13 @@
               <% subcategory_items.forEach(item => { %>
                 <% if (item.number_in_stock <= item.low_limit) { %>
                 <li class='low-limit-item'>
-                  <a href='<%= item.url %>'>
+                  <a href='/inventory/item/<%= item.id %>'>
                     <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p>
 
                   </a>
                     <% } else { %>
                       <li>
-                        <a href='<%= item.url %>'>
+                        <a href='/inventory/item/<%= item.id %>'>
                           <p><%= item.name %> - <strong><em><%= item.brand %></em></strong></p>
 
                         </a>
@@ -42,7 +42,7 @@
           <form method='post' class='delete-form'>
             <div class='admin-password-div'>
               <label for='password'>Enter Admin Password to delete
-                <strong><%= subcategory.name %></strong>
+                <strong><%= subcategory.subcategory_name %></strong>
               </label>
 
               <div class='password-input'>
@@ -61,7 +61,7 @@
                 <%= subcategory_items.length > 0 ? 'disabled' : '' %>>
                 Delete
               </button>
-              <a href='<%= subcategory.url %>'><button type='button'>Cancel</button></a>
+              <a href='/inventory/subcategory/<%= subcategory.id %>'><button type='button'>Cancel</button></a>
             </div>
           </form>
         </section>

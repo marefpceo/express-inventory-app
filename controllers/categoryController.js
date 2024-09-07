@@ -3,13 +3,14 @@ require('dotenv').config();
 const asyncHandler = require('express-async-handler');
 const { DateTime } = require('luxon');
 const { body, validationResult } = require('express-validator');
-const db = require('../db/category_queries');
+const db_queries = require('../db/queries');
+const db_category = require('../db/category_queries');
 
 
 // Displays index page with inventory overview stats
 exports.index = asyncHandler(async (req, res, next) => {
   const currentDate = DateTime.now().toLocaleString(DateTime.DATETIME_FULL);
-  const inventoryOverview = await db.getInventoryOverview();
+  const inventoryOverview = await db_queries.getInventoryOverview();
 
   res.render('index', {
     title: 'Grocery Inventory App',
@@ -21,7 +22,7 @@ exports.index = asyncHandler(async (req, res, next) => {
 
 // Displays list of all Categories
 exports.category_list = asyncHandler(async (req, res, next) => {
-  const allCategories = await db.getCategoryNames();
+  const allCategories = await db_category.getCategoryNames();
 
   res.render('category_list', {
     title: 'Category List',
@@ -32,8 +33,8 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Category
 exports.category_detail = asyncHandler(async (req, res, next) => {
-  const categoryList = await db.getCategoryList(req.params.id);
-  const selectedCategory = await db.getSelectedCategory(req.params.id);
+  const categoryList = await db_category.getCategoryList(req.params.id);
+  const selectedCategory = await db_category.getSelectedCategory(req.params.id);
 
   if (categoryList === null) {
     const err = new Error('Category not found!');
@@ -85,7 +86,7 @@ exports.category_create_post = [
       });
       return;
     } else {
-      await db.createCategory(name, cat_description);
+      await db_category.createCategory(name, cat_description);
       res.redirect('/inventory/categories');
     }
   }),
@@ -95,7 +96,7 @@ exports.category_create_post = [
 // Display Category update form on GET
 exports.category_update_get = asyncHandler(async (req, res, next) => {
   // const category = await Category.findById(req.params.id).exec();
-  const category = await db.getSelectedCategory(req.params.id);
+  const category = await db_category.getSelectedCategory(req.params.id);
 
   if(category === null) {
     const err = new Error('Category not found!');
@@ -125,7 +126,7 @@ exports.category_update_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const selectedCategory = await db.getSelectedCategory(req.params.id);
+    const selectedCategory = await db_category.getSelectedCategory(req.params.id);
 
     if(!errors.isEmpty()) {
       res.render('category_update', {
@@ -144,9 +145,9 @@ exports.category_update_post = [
 
 // Display Category delete form on GET
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
-  const selectedCategory = await db.getSelectedCategory(req.params.id);
-  const subcategoryList = await db.getAssignedSubcategories(req.params.id);
-  const category_items = await db.getCategoryList(req.params.id);
+  const selectedCategory = await db_category.getSelectedCategory(req.params.id);
+  const subcategoryList = await db_category.getAssignedSubcategories(req.params.id);
+  const category_items = await db_category.getCategoryList(req.params.id);
 
   res.render('category_delete', {
     title: `Delete Category: ${selectedCategory[0].category_name}`,
@@ -167,9 +168,9 @@ exports.category_delete_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const selectedCategory = await db.getSelectedCategory(req.params.id);
-    const subcategoryList = await db.getAssignedSubcategories(req.params.id);
-    const category_items = await db.getCategoryList(req.params.id);
+    const selectedCategory = await db_category.getSelectedCategory(req.params.id);
+    const subcategoryList = await db_category.getAssignedSubcategories(req.params.id);
+    const category_items = await db_category.getCategoryList(req.params.id);
 
     if((subcategoryList.length > 0) || (category_items.length > 0)) {
       res.render('category_delete', {
@@ -189,7 +190,7 @@ exports.category_delete_post = [
         errors: errors.array(),
       });
     } else {
-        await db.deleteCategory(req.params.id);
+        await db_category.deleteCategory(req.params.id);
         res.redirect('/inventory/categories');
       }
     })
