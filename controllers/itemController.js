@@ -143,11 +143,7 @@ exports.item_create_post = [
       });
 
         try {
-          if (item.item_image_url !== '') {
-            unlinkSync(`public/uploads/${item.item_image_url}`);
-          } else {
-            return;
-          }
+          unlinkSync(`public/uploads/${item.item_image_url}`);
         } catch (err) {
           console.log(err);
           return next(err);
