@@ -198,34 +198,33 @@ exports.item_update_post = [
     const allCategories = await db_items.getAllCategories();
     const allSubCategories = await db_items.getAllSubcategories();
     const selectedSubcategory = await db_subcategory.getSelectedSubcategory(req.body.subCategorySelect);
-    const item = {
-      name: req.body.itemName,
-      brand: req.body.itemBrand,
-      description: req.body.itemDescription,
-      price: req.body.itemPrice,
-      number_in_stock: req.body.itemStockCount,
-      low_limit: req.body.itemLowLimit,
-      category_id: selectedSubcategory[0].category_id,
-      subcategory_id: req.body.subCategorySelect,
-      item_image_url: typeof req.file === null || 'undefined' ? '' : req.file.filename,
-    }
+    // const item = {
+    //   name: req.body.itemName,
+    //   brand: req.body.itemBrand,
+    //   description: req.body.itemDescription,
+    //   price: req.body.itemPrice,
+    //   number_in_stock: req.body.itemStockCount,
+    //   low_limit: req.body.itemLowLimit,
+    //   category_id: selectedSubcategory[0].category_id,
+    //   subcategory_id: req.body.subCategorySelect,
+    //   item_image_url: typeof req.file === null || 'undefined' ? '' : req.file.filename,
+    // }
     const currentItem = await db_items.getItem(req.params.id);    
     const currentItemImage = currentItem[0].item_image_url === null ? '' : currentItem[0].item_image_url;
     console.log(currentItemImage);
-    console.log(item);
     if(!errors.isEmpty()) {
       res.render('item_update', {
         title: 'Update Item',
-        item: item,
+        item: currentItem[0],
         categories: allCategories,
         sub_categories: allSubCategories,
-        stored_item_image: item.item_image_url,
+        stored_item_image: currentItem[0].item_image_url,
         errors: errors.array(),
       });
       return;
     } else {
-        console.log(currentItemImage !== item.item_image_url);
-        if((currentItemImage !== item.item_image_url)) {
+        console.log(currentItemImage !== currentItem[0].item_image_url);
+        if((currentItemImage !== currentItem[0].item_image_url)) {
           try {
             unlinkSync(`public/uploads/${currentItemImage}`);
           } catch (err) {
@@ -233,8 +232,8 @@ exports.item_update_post = [
             return next(err);
           }
         }
-        await db_items.updateItem(item.name, item.brand, item.description, item.price, item.number_in_stock,
-          item.low_limit, item.category_id, item.subcategory_id, item.item_image_url, req.params.id);
+        await db_items.updateItem(req.body.name, req.body.brand, req.body.description, req.body.price, req.body.number_in_stock,
+          req.body.low_limit, req.body.category_id, req.body.subcategory_id, req.body.item_image_url, req.params.id);
         res.redirect(`/inventory/item/${req.params.id}`);
       }
   })
