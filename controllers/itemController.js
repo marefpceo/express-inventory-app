@@ -47,7 +47,7 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
   res.render('item_detail', {
     title: 'Detail Page',
     item: item,
-    stored_item_image: item.item_image_url === null || undefined || '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image_url}`,
+    stored_item_image: item.item_image_url === (null || undefined || '') ? '/images/Placeholder-view.png' : `/uploads/${item.item_image_url}`,
   });
 });
 
@@ -160,13 +160,6 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
 });
 
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
 // Handle Item update form on POST
 exports.item_update_post = [
   body('itemName')
@@ -202,48 +195,47 @@ exports.item_update_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const currentItemImage = await Item.findById(req.params.id).exec();
-    const [ categories, sub_categories, item ] = await Promise.all([
-      Category.find().sort({ name: 1 }).exec(),
-      SubCategory.find().sort({ name: 1 }).exec(),
-      new Item({
-        name: req.body.itemName,
-        brand: req.body.itemBrand,
-        price: req.body.itemPrice,
-        number_in_stock: req.body.itemStockCount,
-        low_limit: req.body.itemLowLimit,
-        description: req.body.itemDescription,
-        sub_category: await SubCategory.findById(req.body.categorySelect).exec(),
-        category: await Category.findById(
-          (await SubCategory.findById(req.body.categorySelect).exec()).category),
-        item_image: typeof req.file === 'undefined' ? currentItemImage.item_image : req.file.filename,
-        _id: req.params.id,
-      })
-    ]);
-    
-
+    const allCategories = await db_items.getAllCategories();
+    const allSubCategories = await db_items.getAllSubcategories();
+    const selectedSubcategory = await db_subcategory.getSelectedSubcategory(req.body.subCategorySelect);
+    const item = {
+      name: req.body.itemName,
+      brand: req.body.itemBrand,
+      description: req.body.itemDescription,
+      price: req.body.itemPrice,
+      number_in_stock: req.body.itemStockCount,
+      low_limit: req.body.itemLowLimit,
+      category_id: selectedSubcategory[0].category_id,
+      subcategory_id: req.body.subCategorySelect,
+      item_image_url: typeof req.file === null || 'undefined' ? '' : req.file.filename,
+    }
+    const currentItem = await db_items.getItem(req.params.id);    
+    const currentItemImage = currentItem[0].item_image_url === null ? '' : currentItem[0].item_image_url;
+    console.log(currentItemImage);
+    console.log(item);
     if(!errors.isEmpty()) {
       res.render('item_update', {
         title: 'Update Item',
         item: item,
-        categories: categories,
-        sub_categories: sub_categories,
-        stored_item_image: item.item_image,
+        categories: allCategories,
+        sub_categories: allSubCategories,
+        stored_item_image: item.item_image_url,
         errors: errors.array(),
       });
       return;
     } else {
-        if(currentItemImage.item_image !== item.item_image) {
+        console.log(currentItemImage !== item.item_image_url);
+        if((currentItemImage !== item.item_image_url)) {
           try {
-            unlinkSync(`public/uploads/${currentItemImage.item_image}`);
+            unlinkSync(`public/uploads/${currentItemImage}`);
           } catch (err) {
             console.log(err);
             return next(err);
           }
         }
-
-        const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {}).exec();
-        res.redirect(updatedItem.url);
+        await db_items.updateItem(item.name, item.brand, item.description, item.price, item.number_in_stock,
+          item.low_limit, item.category_id, item.subcategory_id, item.item_image_url, req.params.id);
+        res.redirect(`/inventory/item/${req.params.id}`);
       }
   })
 ];
@@ -251,10 +243,8 @@ exports.item_update_post = [
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 
@@ -276,6 +266,12 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
     stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
   });
 });
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Handle Item delete on POST

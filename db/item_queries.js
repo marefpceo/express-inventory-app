@@ -61,11 +61,25 @@ async function createItem(name, brand, description, price, number_in_stock, low_
 }
 
 
+// Update selected item
+async function updateItem(name, brand, description, price, number_in_stock, low_limit, category_id, 
+  subcategory_id, item_image_url, id) {
+    await pool.query(`
+      UPDATE items
+      SET name = ($1), brand = ($2), description = ($3), price = ($4), number_in_stock = ($5), 
+        low_limit = ($6), category_id = ($7), subcategory_id = ($8), item_image_url = ($9)
+      WHERE id = ($10)
+    `, [name, brand, description, price, number_in_stock, low_limit, category_id, subcategory_id, 
+      item_image_url, id]);
+  }
+
+
 module.exports = {
   getItemsList,
   getLowStockItems,
   getItem,
   getAllCategories,
   getAllSubcategories,
-  createItem
+  createItem,
+  updateItem
 }
