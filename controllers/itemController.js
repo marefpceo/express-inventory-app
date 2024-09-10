@@ -1,8 +1,5 @@
 require('dotenv').config();
 
-const Item = require('../models/item');
-const Category = require('../models/category');
-const SubCategory = require('../models/subCategory');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const { unlinkSync } =require('node:fs');
