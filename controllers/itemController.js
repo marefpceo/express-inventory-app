@@ -276,7 +276,7 @@ exports.item_delete_post = [
       });
       return;
     } else {
-        if(item.item_image !== '') {
+        if(item.item_image_url !== '') {
           try {
             unlinkSync(`public/uploads/${item.item_image_url}`);
           } catch (err) {

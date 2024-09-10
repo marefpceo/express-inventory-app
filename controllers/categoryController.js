@@ -135,7 +135,7 @@ exports.category_update_post = [
       });
       return;
     } else {
-      await db.updateCategory(req.body.name, req.body.cat_description, req.params.id);
+      await db_category.updateCategory(req.body.name, req.body.cat_description, req.params.id);
       res.redirect('/inventory/categories');
     }
   }),
