@@ -28,13 +28,13 @@
                   <p><strong>In stock:</strong>&nbsp;<%= item.number_in_stock %></p>
               <% } %>
               <p><strong>Low Limit:</strong>&nbsp;<%= item.low_limit %></p>
-              <p><strong>Category:</strong>&nbsp;<%= item_category.name%></p>
-              <p><strong>Subcategory:</strong>&nbsp;<%= item_subcategory.name %></p>
+              <p><strong>Category:</strong>&nbsp;<%= item.category_name%></p>
+              <p><strong>Subcategory:</strong>&nbsp;<%= item.subcategory_name %></p>
             </div>
             <div class='item-image'>
               <img 
                 src='<%= stored_item_image %>' 
-                alt='<%= item.item_image === '' ? 'Placeholder image' : `${item.name} image` %>'
+                alt='<%= item.item_image_url === '' ? 'Placeholder image' : `${item.name} image` %>'
               >
             </div>
           </div>
@@ -60,7 +60,7 @@
 
             <div class='delete-button-div'>
               <button type='submit' class='delete-button'>Delete</button>
-              <a href='<%= item.url %>'><button type='button'>Cancel</button></a>
+              <a href='/inventory/item/<%= item.id %>'><button type='button'>Cancel</button></a>
             </div>
           </form>
           

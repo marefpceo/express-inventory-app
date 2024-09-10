@@ -26,7 +26,6 @@ exports.sub_category_detail = asyncHandler(async (req, res, next) => {
     return next(err);
   }
 
-  console.log(subcategory);
   res.render('sub_category_detail', {
     title: `${subcategoryName[0].subcategory_name} List`,
     category: subcategoryName[0].category_name,

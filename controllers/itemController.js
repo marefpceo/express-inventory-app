@@ -36,7 +36,6 @@ exports.item_low_stock = asyncHandler(async (req, res, next) => {
 exports.item_detail = asyncHandler(async (req, res, next) => {
   const temp = await db_items.getItem(req.params.id);
   const item = temp[0];
-  console.log(item);
 
   if (item === null) {
     const err = new Error('Item not found!');
@@ -147,8 +146,6 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
   const item = await db_items.getItem(req.params.id);
   const categories = await db_items.getAllCategories();
   const subcategories = await db_items.getAllSubcategories();
-  
-  console.log(item);
 
   res.render('item_update', {
     title: 'Update Item',
@@ -212,7 +209,6 @@ exports.item_update_post = [
       item_image_url: typeof req.file === 'undefined' ? currentItemImage : req.file.filename,
     }
    
-    console.log(currentItemImage);
     if(!errors.isEmpty()) {
       res.render('item_update', {
         title: 'Update Item',
@@ -224,8 +220,6 @@ exports.item_update_post = [
       });
       return;
     } else {
-
-        console.log(currentItemImage !== item.item_image_url);
         if((currentItemImage !== item.item_image_url) && (currentItemImage !== '')) {
           try {
             unlinkSync(`public/uploads/${currentItemImage}`);
@@ -242,16 +236,10 @@ exports.item_update_post = [
 ];
 
 
-
-//////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// CURRENTLY IN WORK /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 // Display Item delete form on GET
 exports.item_delete_get = asyncHandler(async (req, res, next) => {
-  const item = await Item.findById(req.params.id).exec();
+  const currentItem = await db_items.getItem(req.params.id);
+  const item = currentItem[0];
 
   if(item === null) {
     const err = Error('Item not found!');
@@ -259,20 +247,13 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
     return next(err);
   }
 
+  console.log(item);
   res.render('item_delete', {
     title: 'Delete Item',
     item: item,
-    item_category: await Category.findById(item.category).exec(),
-    item_subcategory: await SubCategory.findById(item.sub_category).exec(),
-    stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
+    stored_item_image: item.item_image_url === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image_url}`,
   });
 });
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// BELOW THIS LINE NOT UPDATED ////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Handle Item delete on POST
@@ -285,29 +266,28 @@ exports.item_delete_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const item = await Item.findById(req.params.id).exec();
+    const currentItem = await db_items.getItem(req.params.id);
+    const item = currentItem[0];
 
     if (!errors.isEmpty()){
       res.render('item_delete', {
         title: 'Delete Item',
         item: item,
-        item_category: await Category.findById(item.category).exec(),
-        item_subcategory: await SubCategory.findById(item.sub_category).exec(),
-        stored_item_image: item.item_image === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image}`,
+        stored_item_image: item.item_image_url === '' ? '/images/Placeholder-view.png' : `/uploads/${item.item_image_url}`,
         password: req.body.password,
         errors: errors.array(),
       });
       return;
     } else {
-        await Item.findByIdAndDelete(req.params.id).exec();
         if(item.item_image !== '') {
           try {
-            unlinkSync(`public/uploads/${item.item_image}`);
+            unlinkSync(`public/uploads/${item.item_image_url}`);
           } catch (err) {
             console.log(err);
             return next(err);
           }
         }
+        await db_items.deleteItem(req.params.id);
         res.redirect('/inventory/items');
       }
     })

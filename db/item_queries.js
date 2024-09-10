@@ -71,7 +71,15 @@ async function updateItem(name, brand, description, price, number_in_stock, low_
       WHERE id = ($10)
     `, [name, brand, description, price, number_in_stock, low_limit, category_id, subcategory_id, 
       item_image_url, id]);
-  }
+}
+
+// Delete selected item
+async function deleteItem(itemId) {
+  await pool.query(`
+    DELETE FROM items
+    WHERE id = ($1)
+  `, [itemId]);
+}
 
 
 module.exports = {
@@ -81,5 +89,6 @@ module.exports = {
   getAllCategories,
   getAllSubcategories,
   createItem,
-  updateItem
+  updateItem,
+  deleteItem
 }

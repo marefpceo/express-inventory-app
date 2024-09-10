@@ -95,7 +95,6 @@ exports.category_create_post = [
 
 // Display Category update form on GET
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-  // const category = await Category.findById(req.params.id).exec();
   const category = await db_category.getSelectedCategory(req.params.id);
 
   if(category === null) {
