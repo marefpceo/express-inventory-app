@@ -1,3 +1,5 @@
+## No longer maintained. [Version 2 can be found here](https://github.com/marefpceo/express-inventory-app-v2)
+
 # Express Inventory App
 
 ### Introduction
